@@ -1,7 +1,5 @@
 #include <algorithm>
 #include <vector>
-#ifndef __GRID_H__
-#define __GRID_H__
 
 class Grid {
 public:
@@ -14,7 +12,7 @@ public:
 
     std::vector<int>& getGrid();
 
-    void Grid::setGrid();
+    void setGrid();
 
     void setTileAtCoordinate(int x, int y,int value); 
 
@@ -23,4 +21,3 @@ private:
     int width_;
     std::vector<int> map;
 };
-#endif

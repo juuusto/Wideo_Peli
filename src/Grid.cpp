@@ -6,6 +6,7 @@ int Grid::getTileAtCoordinate( int x, int y) {
     return map[y*width_ +x];
 }
 
+Grid::Grid() {};
 
 std::vector<int>& Grid::getGrid() { return map;}
 
