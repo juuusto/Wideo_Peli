@@ -2,22 +2,16 @@
 
 std::pair<int,int> Grid::getSize() {return std::make_pair (width_, height_);}
 
-int Grid::getTile( int x, int y) {
+int Grid::getTileAtCoordinate( int x, int y) {
     return map[x][y];
 }
 
 
-std::vector<std::vector<int>>& Grid::getGrid() { return map;}
+std::vector<int>& Grid::getGrid() { return map;}
 
 
 void Grid::setGrid() {
-    for( int x = 0; x < width_; x++)
-    {
-        for( int y = 0; y < height_; y++)
-        {
-            map[x][y] = 0;
-        }
-    }
+    for( int i = 0; width_ *height_; i++) { map.push_back(0);}
 }
 
-void Grid::setTile(int x, int y, int value) { map[x][y] = value;}
+void Grid::setTileAtCoordinate(int x, int y, int value) { map[y*width_ +x] = value;}
