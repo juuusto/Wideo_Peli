@@ -1,0 +1,6 @@
+class Tile {
+public:
+    Tile();
+    
+
+};
