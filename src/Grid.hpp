@@ -1,9 +1,11 @@
 #include <algorithm>
 #include <vector>
+#ifndef __GRID_H__
+#define __GRID_H__
 
 class Grid {
 public:
-    Grid() = default;
+    Grid();
     Grid(int width, int height) : height_(height), width_(width) {}
 
     std::pair<int,int> getSize();
@@ -21,3 +23,4 @@ private:
     int width_;
     std::vector<int> map;
 };
+#endif
