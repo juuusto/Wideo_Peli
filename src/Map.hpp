@@ -1,10 +1,11 @@
 #include "Tile.hpp"
 #include "Grid.hpp"
+#include <vector>
 
 class Map {
 public:
-    Map(std::vector<Tile> tileArr, int rectSize, int x, int y) :
-    tileArr_(tileArr), rectSize_(rectSize), width(x), height(y) {
+    Map(std::vector<Tile> tileArr, int rectSize, int x, int y, std::vector<int> idArray) :
+    tileArr_(tileArr), rectSize_(rectSize), width(x), height(y), idArray_(idArray) {
 
         grid = Grid(x*rectSize_, y*rectSize_);
         grid.setGrid();
@@ -27,5 +28,6 @@ private:
     int rectSize_;
     int width;
     int height;
+    std::vector<int> idArray_;
     Grid grid;
 };

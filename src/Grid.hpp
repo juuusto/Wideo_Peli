@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <vector>
 
 class Grid {
 public:

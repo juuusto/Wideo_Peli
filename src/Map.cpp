@@ -8,7 +8,7 @@ void Map::constructMap() {
     std::pair<int,int> size = grid.getSize();
     for(int x = 0; x < size.first; x++) {
         for (int y = 0; y < size.second; y++) {
-            grid.setTileAtCoordinate[y*size.first + x];
+            grid.setTileAtCoordinate(x,y, idArray_[y*size.first + x]);
         }
     }
 }

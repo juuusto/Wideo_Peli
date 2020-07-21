@@ -3,7 +3,7 @@
 std::pair<int,int> Grid::getSize() {return std::make_pair (width_, height_);}
 
 int Grid::getTileAtCoordinate( int x, int y) {
-    return map[x][y];
+    return map[y*width_ +x];
 }
 
 
