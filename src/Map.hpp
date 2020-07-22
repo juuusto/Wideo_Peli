@@ -7,7 +7,7 @@ public:
     Map(std::vector<Tile> tileArr, int rectSize, int x, int y, std::vector<int> idArray) :
     tileArr_(tileArr), rectSize_(rectSize), width(x), height(y), idArray_(idArray) {
 
-        grid = Grid(x*rectSize_, y*rectSize_);
+        grid = Grid(x, y);
         grid.setGrid();
     }
 
