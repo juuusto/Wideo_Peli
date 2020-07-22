@@ -7,20 +7,20 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
-
+#include "network.hpp"
 
 
 
 class Game
 {
 public:
-    Game(Map map, Player player, otherPlayers others) : map_(map), player_(player), others_(others){
+    Game(Map map, Player player, otherPlayers others, Network* net) : map_(map), player_(player), others_(others),net_(net){
 
                                                                                     };
 
     int run(int windowX = 800, int windowY = 600)
     {
-                   
+        int selectedType =0;         
         sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
         sf::View view(sf::FloatRect(0.f, 20.f, windowX, windowY - 20.f));
 
@@ -55,15 +55,27 @@ public:
         {
             return 0;
         }
+
+        sf::Texture otherCar;
+        if (!otherCar.loadFromFile("carNET.png"))
+        {
+            return 0;
+        }
        
         sf::Sprite playerSprite;
+        sf::Sprite netSprite;
+        netSprite.move(windowX / 2, windowY / 2);
+        netSprite.setTexture(otherCar);
+        netSprite.setOrigin(otherCar.getSize().x * 0.5f, otherCar.getSize().y * 0.5f);
+        netSprite.setPosition(netSprite.getPosition().x + netSprite.getOrigin().x, netSprite.getPosition().y + netSprite.getOrigin().y);
+
 
         playerSprite.move(windowX / 2, windowY / 2);
         playerSprite.setTexture(car);
         playerSprite.setOrigin(car.getSize().x * 0.5f, car.getSize().y * 0.5f);
         playerSprite.setPosition(playerSprite.getPosition().x + playerSprite.getOrigin().x, playerSprite.getPosition().y + playerSprite.getOrigin().y);
         float rot = playerSprite.getRotation();
-
+        //window.setFramerateLimit(30);
         while (window.isOpen())
         {
 
@@ -166,9 +178,17 @@ public:
                 } 
             }
 
+            if(net_->isConnected()){
+                net_->refreshData(playerData{(int)playerX,(int)playerY,(int)rot,net_->getConId()});
+                
+                for(playerData pd :net_->getPlayerDataAll()){
+                    //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
+                    netSprite.setPosition(pd.x,pd.y);
+                    netSprite.setRotation(pd.r);
+                    if(pd.type!=net_->getConId())window.draw(netSprite);
+                }
 
-
-
+            }
 
 
 
@@ -184,10 +204,18 @@ private:
     Map map_;
     Player player_;
     otherPlayers others_;
+    Network* net_;
 };
 
 int main()
 {
+    std::string addr;
+    std::cout<<"IP:";
+    std::cin >> addr;
+    Network aa(addr);
+    aa.connect();
+
+    Network *verkko = &aa;
 
 
     std::vector<Tile> tileArr;
@@ -203,7 +231,7 @@ int main()
 
     Player pelaaja("Huutis Ukko", "", ajoneuvo);
 
-    Game peli(kartta, pelaaja, muutPelaajat);
+    Game peli(kartta, pelaaja, muutPelaajat, verkko);
     
     int res = peli.run(800, 600);
 
