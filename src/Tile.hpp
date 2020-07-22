@@ -10,7 +10,7 @@ public:
 
     //TODO: collisions
     bool isCollision(int x, int y){
-        return x ==199;
+        return false;//x ==199;
     }
 private:
 std::string tilename_;
