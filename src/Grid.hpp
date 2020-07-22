@@ -4,7 +4,7 @@
 class Grid {
 public:
     Grid();
-    Grid(int width, int height) : height_(height), width_(width) {}
+    Grid(int width, int height) : width_(width), height_(height) {}
 
     std::pair<int,int> getSize();
 
@@ -17,7 +17,8 @@ public:
     void setTileAtCoordinate(int x, int y,int value); 
 
 private:
-    int height_;
     int width_;
+    int height_;
+
     std::vector<int> map;
 };

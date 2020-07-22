@@ -12,7 +12,16 @@ void Map::constructMap() {
         }
     }
 }
-
+int Map::getBlockSize(){
+    return rectSize_;
+}
 Tile Map::getTile(int id) { return tileArr_[id];}
 
 Tile Map::getTile(int x, int y) { return tileArr_[grid.getTileAtCoordinate(x,y)];}
+
+int Map::getTileId(int x, int y){
+    return grid.getTileAtCoordinate(x,y);
+}
+std::vector<Tile> Map::getTiles(){
+    return tileArr_;
+}

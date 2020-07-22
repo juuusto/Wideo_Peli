@@ -12,7 +12,7 @@ std::vector<int>& Grid::getGrid() { return map;}
 
 
 void Grid::setGrid() {
-    for( int i = 0; width_ *height_; i++) { map.push_back(0);}
+    for( int i = 0; i<width_ *height_; i++) { map.push_back(0);}
 }
 
 void Grid::setTileAtCoordinate(int x, int y, int value) { map[y*width_ +x] = value;}
