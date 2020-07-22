@@ -109,8 +109,22 @@ public:
             int blockX = playerX / map_.getBlockSize();
             int blockY = playerY / map_.getBlockSize();
 
+            int offsetInTileX = playerX-blockX*map_.getBlockSize();
+            int offsetInTileY = playerY-blockY*map_.getBlockSize();
+
+
             float xChange = currentSpeed * cos((rot / 180.f) * 3.14f);
             float yChange = currentSpeed * sin((rot / 180.f) * 3.14f);
+
+            if(map_.getTile(blockX,blockY).isCollision(offsetInTileX,offsetInTileY)){
+                // if collision, dont allow move (reverse move)
+
+             xChange *=-3.f;
+             yChange *=-3.f;
+
+
+            }
+
 
             if (playerX < 0)
                 xChange = 1.f;
@@ -123,7 +137,10 @@ public:
 
             view.move(xChange, yChange);
             window.setView(view);
-            text.setString("PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX,blockY)) + "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y));
+            text.setString(
+                "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX,blockY)) + 
+                "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y)+" OffsetXinTile:"+std::to_string(offsetInTileX)+" OffsetYinTile:"+std::to_string(offsetInTileY)
+            );
 
             text.move(xChange, yChange);
             playerSprite.move(xChange, yChange);
