@@ -75,7 +75,7 @@ public:
         playerSprite.setOrigin(car.getSize().x * 0.5f, car.getSize().y * 0.5f);
         playerSprite.setPosition(playerSprite.getPosition().x + playerSprite.getOrigin().x, playerSprite.getPosition().y + playerSprite.getOrigin().y);
         float rot = playerSprite.getRotation();
-        //window.setFramerateLimit(30);
+        window.setFramerateLimit(60);
         while (window.isOpen())
         {
 
@@ -226,7 +226,7 @@ int main()
     //kartta.constructMap();
         //
 
-    Vehicle ajoneuvo("assets/car.png", .5f, .001f, .1f, .0005f);
+    Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
     otherPlayers muutPelaajat;
 
     Player pelaaja("Huutis Ukko", "", ajoneuvo);
