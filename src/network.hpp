@@ -80,18 +80,23 @@ class Network {
         int i = 0;
         std::string command;
         int tmp_arr[20];
-        while ((pos = s.find(delimiter)) != std::string::npos) {
-            command = s.substr(0, pos);
-            //std::cout << command << std::endl;
-            tmp_arr[i]=std::stoi(command);
-            s.erase(0, pos + delimiter.length());
-            i+=1;
-        }
-        if(i!=0) data_.clear();
-        for(int j = 0; j<i;j+=4){
-            data_.push_back({tmp_arr[j],tmp_arr[j+1],tmp_arr[j+2],tmp_arr[j+3]});
-        }
+        try {
 
+
+            while ((pos = s.find(delimiter)) != std::string::npos) {
+                command = s.substr(0, pos);
+                //std::cout << command << std::endl;
+                tmp_arr[i]=std::stoi(command);
+                s.erase(0, pos + delimiter.length());
+                i+=1;
+            }
+            if(i!=0) data_.clear();
+            for(int j = 0; j<i;j+=4){
+                data_.push_back({tmp_arr[j],tmp_arr[j+1],tmp_arr[j+2],tmp_arr[j+3]});
+            }
+        } catch (const std::exception& e) {
+            
+        }
 
     }
     playerData getPlayerData(int id){

@@ -35,7 +35,7 @@ public:
 
         sf::Text text;
         sf::Font font;
-        if (!font.loadFromFile("arial.ttf"))
+        if (!font.loadFromFile("assets/arial.ttf"))
         {
             return 0;
         }
@@ -57,7 +57,7 @@ public:
         }
 
         sf::Texture otherCar;
-        if (!otherCar.loadFromFile("carNET.png"))
+        if (!otherCar.loadFromFile("assets/carNET.png"))
         {
             return 0;
         }
@@ -219,14 +219,14 @@ int main()
 
 
     std::vector<Tile> tileArr;
-    tileArr.push_back(Tile("tile.png"));
+    tileArr.push_back(Tile("assets/tile.png"));
     std::vector<int> idArray = {1,1,1,1,1,1,1};
 //return 0;
     Map kartta(tileArr,200,14,14,idArray);
     //kartta.constructMap();
         //
 
-    Vehicle ajoneuvo("car.png", .5f, .001f, .1f, .0005f);
+    Vehicle ajoneuvo("assets/car.png", .5f, .001f, .1f, .0005f);
     otherPlayers muutPelaajat;
 
     Player pelaaja("Huutis Ukko", "", ajoneuvo);

@@ -3,3 +3,6 @@
 /src/server.o
 /src/serv
 .vscode/
+SFML-2.5.1
+serv.exe
+game.exe
