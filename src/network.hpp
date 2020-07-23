@@ -73,8 +73,9 @@ class Network {
             // error...
         }
 
+        
+        if(received==0)return;
         std::string s(data);
-        if(s=="")return;
         std::string delimiter = ";";
         size_t pos = 0;
         int i = 0;
