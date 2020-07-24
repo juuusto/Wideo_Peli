@@ -55,7 +55,12 @@ int main()
         if(tmp_arr[0]=="CONNECT"){
             std::cout << "Connection... \n"<<std::endl;
             players.push_back(playerData{100,100,0,(int)players.size()});
-            res = "OK;"+std::to_string(players.size()-1)+";";
+            if (players.size()-1 < 15){
+                res = "OK;"+std::to_string(players.size()-1)+";";
+            } else {
+                res = "ERROR;TOO MANY PLAYERS;";
+            }
+
         } else if (tmp_arr[0]=="UPDATE"){
             std::cout << "Update... \n"<<std::endl;
             players[stoi(tmp_arr[4])]={stoi(tmp_arr[1]),stoi(tmp_arr[2]),stoi(tmp_arr[3]),stoi(tmp_arr[4])};

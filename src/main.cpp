@@ -131,14 +131,18 @@ public:
             float xChange = currentSpeed * cos((rot / 180.f) * 3.14f);
             float yChange = currentSpeed * sin((rot / 180.f) * 3.14f);
 
-            if(map_.getTile(blockX,blockY).isCollision(offsetInTileX,offsetInTileY)){
-                // if collision, dont allow move (reverse move)
 
-             xChange *=-3.f;
-             yChange *=-3.f;
-
-
+            if(blockX<0 || blockY<0 || blockX>=map_.getMapWidth() || blockY>=map_.getMapHeight()){
+                xChange *=-3.f;
+                yChange *=-3.f;
+            } else {
+                if(map_.getTile(blockX,blockY).isCollision(offsetInTileX,offsetInTileY)){
+                    // if collision, dont allow move (reverse move)
+                xChange *=-3.f;
+                yChange *=-3.f;
+                }
             }
+
 
 
             if (playerX < 0)
@@ -168,9 +172,9 @@ public:
             window.clear();
 
 
-
-            for(int i=blockX-3; i<blockX+3;i++){
-                for(int j=blockY-3; j<blockY+3;j++){
+            int drawDistance = 3;
+            for(int i=blockX-drawDistance; i<blockX+drawDistance;i++){
+                for(int j=blockY-drawDistance; j<blockY+drawDistance;j++){
                     sf::Sprite drawTile;
                     if(i<0 || j<0 || i>=map_.getMapWidth() || j>=map_.getMapHeight())continue;
 
@@ -213,10 +217,11 @@ private:
 int main()
 {
     std::string addr="";
-    std::cout<<"IP:";
+    std::cout<<"IP (or l for localhost or n for offline play):";
     std::cin >> addr;
-
+    if(addr=="l") addr="127.0.0.1";
     Network aa(addr);
+
     if(addr!="n") aa.connect();
 
 

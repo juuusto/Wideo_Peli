@@ -41,8 +41,13 @@ class Network {
         std::string s(data);
 
         if(s.substr(0,3)=="OK;"){
-            conId_ = std::stoi(s.substr(3,1));
-            connected_=true;
+            s.erase(0, 3);
+            int pos = 0;
+            if((pos = s.find(";")) != std::string::npos) {
+                conId_ = std::stoi(s.substr(0, pos));
+                connected_=true;
+            }
+
         }
         socket_.setBlocking(false);
         return connected_;
@@ -58,7 +63,7 @@ class Network {
     }
     void refreshData(playerData pd){
         // UDP socket:
-
+socket_.setBlocking(true);
         sf::IpAddress recipient = serveraddr_;
 
         std::string data2 ="UPDATE;"+std::to_string(pd.x)+";"+std::to_string(pd.y)+";"+std::to_string(pd.r)+";"+std::to_string(pd.type)+";";
@@ -68,7 +73,7 @@ class Network {
         }
 
         sf::IpAddress sender;
-        char data[100];
+        char data[300];
         std::size_t received;
         unsigned short port;
         if (socket_.receive(data, 100, received, sender, port) != sf::Socket::Done)
@@ -83,7 +88,7 @@ class Network {
         size_t pos = 0;
         int i = 0;
         std::string command;
-        int tmp_arr[20];
+        int tmp_arr[100];
         try {
 
 
@@ -101,7 +106,7 @@ class Network {
         } catch (const std::exception& e) {
             
         }
-
+socket_.setBlocking(false);
     }
     playerData getPlayerData(int id){
         return data_[id];
