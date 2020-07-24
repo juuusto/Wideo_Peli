@@ -17,7 +17,10 @@ class Network {
         }
         socket_.setBlocking(false);
     }
-
+    ~Network(){
+        data_.clear();
+        socket_.unbind();
+    }
     bool connect(){
         socket_.setBlocking(true);
         std::string data2 = "CONNECT;";

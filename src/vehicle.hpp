@@ -32,12 +32,3 @@ private:
     float turn_speed_;
     float drag_;
 };
-
-struct Vehicle1
-{
-    std::string sprite;
-    float max_speed;
-    float acceleration;
-    float turn_speed;
-    float drag;
-};

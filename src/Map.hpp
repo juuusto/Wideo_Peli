@@ -12,7 +12,10 @@ public:
         grid = Grid(x, y);
         grid.setGrid();
     }
-
+    ~Map(){
+        tileArr_.clear();
+        idArray_.clear();
+    }
     
     int getMapHeight(); 
 

@@ -5,6 +5,10 @@ class Grid {
 public:
     Grid();
     Grid(int width, int height) : width_(width), height_(height) {}
+    ~Grid(){
+        map.clear();
+    };
+
 
     std::pair<int,int> getSize();
 

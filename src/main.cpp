@@ -18,6 +18,9 @@ public:
 
                                                                                     };
 
+    ~Game(){
+
+    } 
     int run(int windowX = 800, int windowY = 600)
     {
         int selectedType =0;         
@@ -209,11 +212,13 @@ private:
 
 int main()
 {
-    std::string addr;
+    std::string addr="";
     std::cout<<"IP:";
     std::cin >> addr;
+
     Network aa(addr);
-    aa.connect();
+    if(addr!="n") aa.connect();
+
 
     Network *verkko = &aa;
 
@@ -236,7 +241,7 @@ int main()
     Game peli(kartta, pelaaja, muutPelaajat, verkko);
     
     int res = peli.run(800, 600);
-
+    tileArr.clear();
 
     return res;
 }
