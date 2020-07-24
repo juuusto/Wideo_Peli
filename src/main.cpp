@@ -220,9 +220,11 @@ int main()
 
     std::vector<Tile> tileArr;
     tileArr.push_back(Tile("assets/tile.png"));
+    tileArr.push_back(Tile("assets/tile1.png"));
     std::vector<int> idArray = {1,1,1,1,1,1,1};
 //return 0;
     Map kartta(tileArr,200,14,14,idArray);
+    kartta.setTile(0,0,1);
     //kartta.constructMap();
         //
 
