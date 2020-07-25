@@ -135,24 +135,12 @@ public:
             if(blockX<0 || blockY<0 || blockX>=map_.getMapWidth() || blockY>=map_.getMapHeight()){
                 xChange *=-3.f;
                 yChange *=-3.f;
-            } else {
-                if(map_.getTile(blockX,blockY).isCollision(offsetInTileX,offsetInTileY)){
-                    // if collision, dont allow move (reverse move)
+            } else if(map_.getTile(blockX,blockY).isCollision(offsetInTileX,offsetInTileY)){
+                // if collision, dont allow move (reverse move)
                 xChange *=-3.f;
                 yChange *=-3.f;
-                }
             }
 
-
-
-            if (playerX < 0)
-                xChange = 1.f;
-            else if (playerX > map_.getMapWidth() * map_.getBlockSize())
-                xChange = -1.f;
-            if (playerY < 0)
-                yChange = 1.f;
-            else if (playerY > map_.getMapHeight() * map_.getBlockSize())
-                yChange = -1.f;
 
             view.move(xChange, yChange);
             window.setView(view);
