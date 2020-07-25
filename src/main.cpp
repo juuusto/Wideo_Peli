@@ -7,14 +7,14 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
-#include "network.hpp"
+#include "network.cpp"
 
 
 
 class Game
 {
 public:
-    Game(Map map, Player player, otherPlayers others, Network* net) : map_(map), player_(player), others_(others),net_(net){
+    Game(Map map, Player player, Network* net) : map_(map), player_(player), net_(net){
 
                                                                                     };
 
@@ -164,11 +164,6 @@ public:
             text.move(xChange, yChange);
             playerSprite.move(xChange, yChange);
 
-
-            // do this completely
-            others_.updatePlayers();
-            //window.getPosition();
-
             window.clear();
 
 
@@ -210,7 +205,6 @@ public:
 private:
     Map map_;
     Player player_;
-    otherPlayers others_;
     Network* net_;
 };
 
@@ -239,11 +233,10 @@ int main()
         //
 
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
-    otherPlayers muutPelaajat;
 
     Player pelaaja("Huutis Ukko", "", ajoneuvo);
 
-    Game peli(kartta, pelaaja, muutPelaajat, verkko);
+    Game peli(kartta, pelaaja, verkko);
     
     int res = peli.run(800, 600);
     tileArr.clear();

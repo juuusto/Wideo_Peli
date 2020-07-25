@@ -1,15 +1,16 @@
 #include <SFML/Network.hpp>
 #include<iostream>
+#include <ctime>
 
 
 
 
-
-struct playerData{
+struct playerServerData{
     int x;
     int y;
     int r;
     int type;
+    std::time_t connectTimeout;
 };
 
 
@@ -23,8 +24,11 @@ int main()
     sf::UdpSocket socket;
     socket.bind(inPort) != sf::Socket::Done;
     socket.setBlocking(false);
-    std::vector<playerData> players;
+    std::vector<playerServerData> players;
+    std::time_t currentTime = std::time(nullptr);
     while(true){
+        currentTime = std::time(nullptr);
+
         sf::IpAddress sender;
         char data[100];
         std::size_t received;
@@ -54,7 +58,7 @@ int main()
         std::string res;
         if(tmp_arr[0]=="CONNECT"){
             std::cout << "Connection... \n"<<std::endl;
-            players.push_back(playerData{100,100,0,(int)players.size()});
+            players.push_back(playerServerData{100,100,0,(int)players.size(),currentTime});
             if (players.size()-1 < 15){
                 res = "OK;"+std::to_string(players.size()-1)+";";
             } else {
@@ -63,10 +67,10 @@ int main()
 
         } else if (tmp_arr[0]=="UPDATE"){
             std::cout << "Update... \n"<<std::endl;
-            players[stoi(tmp_arr[4])]={stoi(tmp_arr[1]),stoi(tmp_arr[2]),stoi(tmp_arr[3]),stoi(tmp_arr[4])};
+            players[stoi(tmp_arr[4])]={stoi(tmp_arr[1]),stoi(tmp_arr[2]),stoi(tmp_arr[3]),stoi(tmp_arr[4]),currentTime};
             res = "";
-            for (playerData pd: players){
-                res += std::to_string(pd.x)+";"+std::to_string(pd.y)+";"+std::to_string(pd.r)+";"+std::to_string(pd.type)+";";
+            for (playerServerData pd: players){
+                if(currentTime-pd.connectTimeout<2)res += std::to_string(pd.x)+";"+std::to_string(pd.y)+";"+std::to_string(pd.r)+";"+std::to_string(pd.type)+";";
             }
 
 
@@ -76,6 +80,6 @@ int main()
         {
             // error...
         }
-
+std::cout << "Time: "<< currentTime <<std::endl;
     }
 }
