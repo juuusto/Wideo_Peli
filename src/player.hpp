@@ -2,6 +2,9 @@ class Player
 {
 public:
     Player(std::string name, std::string image, Vehicle car, int x = 0, int y = 0) : x_(0), y_(0), name_(name), image_(image), car_(car){};
+    ~Player(){
+        
+    }
     std::pair<int, int> getLocation()
     {
         return std::pair<int, int>(x_, y_);

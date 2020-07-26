@@ -1,15 +1,17 @@
 #include <SFML/Network.hpp>
 #include<iostream>
+#include <ctime>
 
 
 
 
-
-struct playerData{
+struct playerServerData{
     int x;
     int y;
     int r;
     int type;
+    std::time_t connectTimeout;
+    std::string name;
 };
 
 
@@ -23,8 +25,11 @@ int main()
     sf::UdpSocket socket;
     socket.bind(inPort) != sf::Socket::Done;
     socket.setBlocking(false);
-    std::vector<playerData> players;
+    std::vector<playerServerData> players;
+    std::time_t currentTime = std::time(nullptr);
     while(true){
+        currentTime = std::time(nullptr);
+
         sf::IpAddress sender;
         char data[100];
         std::size_t received;
@@ -53,24 +58,45 @@ int main()
         std::cout <<"\n" << tmp_arr[0] <<"\n"<<std::endl;
         std::string res;
         if(tmp_arr[0]=="CONNECT"){
-            std::cout << "Connection... \n"<<std::endl;
-            players.push_back(playerData{100,100,0,(int)players.size()});
-            res = "OK;"+std::to_string(players.size()-1)+";";
-        } else if (tmp_arr[0]=="UPDATE"){
-            std::cout << "Update... \n"<<std::endl;
-            players[stoi(tmp_arr[4])]={stoi(tmp_arr[1]),stoi(tmp_arr[2]),stoi(tmp_arr[3]),stoi(tmp_arr[4])};
-            res = "";
-            for (playerData pd: players){
-                res += std::to_string(pd.x)+";"+std::to_string(pd.y)+";"+std::to_string(pd.r)+";"+std::to_string(pd.type)+";";
+            std::cout << "Connection... \n"<< std::to_string(players.size())<<std::endl;
+            int pCount = 0;
+            for (playerServerData pd: players){
+                if(currentTime-pd.connectTimeout<2)pCount +=1;
+            }
+            
+            if(pCount == 0){
+                players.clear();
             }
 
+            if (pCount < 15){
+                players.push_back(playerServerData{100,100,0,(int)players.size(),currentTime,tmp_arr[1]});
+                res = "OK;"+std::to_string(players.size()-1)+";";
+            } else {
+                res = "ERROR;TOO MANY PLAYERS;";
+            }
 
+        } else if (tmp_arr[0]=="UPDATE"){
+            std::cout << "Update... \n"<<std::endl;
+            players[stoi(tmp_arr[4])]={stoi(tmp_arr[1]),stoi(tmp_arr[2]),stoi(tmp_arr[3]),stoi(tmp_arr[4]),currentTime,players[stoi(tmp_arr[4])].name};
+            res = "";
+            for (playerServerData pd: players){
+                if(currentTime-pd.connectTimeout<2)res += std::to_string(pd.x)+";"+std::to_string(pd.y)+";"+std::to_string(pd.r)+";"+std::to_string(pd.type)+";"+pd.name+";";
+            }
+        } else if (tmp_arr[0]=="PLAYERS"){
+            std::cout << "Sending Player list... \n"<<std::endl;
+            res = "";
+            int pCount = 0;
+            for (playerServerData pd: players){
+                if(currentTime-pd.connectTimeout<2)pCount +=1;
+            }
+
+            res += "PLAYERCOUNT;"+std::to_string(pCount)+";";
         } 
         std::cout << res <<"\n"<<std::endl;
         if (socket.send(res.c_str(), res.size()+1, sender, outPort) != sf::Socket::Done)
         {
             // error...
         }
-
+std::cout << "Time: "<< currentTime <<std::endl;
     }
 }

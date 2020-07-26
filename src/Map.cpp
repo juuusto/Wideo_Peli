@@ -22,6 +22,9 @@ Tile Map::getTile(int x, int y) { return tileArr_[grid.getTileAtCoordinate(x,y)]
 int Map::getTileId(int x, int y){
     return grid.getTileAtCoordinate(x,y);
 }
+void Map::setTile(int x, int y,int value){
+    grid.setTileAtCoordinate(x, y,value);
+}
 std::vector<Tile> Map::getTiles(){
     return tileArr_;
 }

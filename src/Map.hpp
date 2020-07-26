@@ -12,7 +12,10 @@ public:
         grid = Grid(x, y);
         grid.setGrid();
     }
-
+    ~Map(){
+        tileArr_.clear();
+        idArray_.clear();
+    }
     
     int getMapHeight(); 
 
@@ -27,7 +30,7 @@ public:
     Tile getTile(int x, int y);
     int getTileId(int x, int y);
     std::vector<Tile> getTiles();
-
+    void setTile(int x, int y,int value);
 private:
     std::vector<Tile> tileArr_;
     int rectSize_;
