@@ -156,10 +156,10 @@ public:
 
             playerSprite.move(xChange, yChange);
             for(playerData pd :net_->getPlayerDataAll()){
-                if(playerSprite.getTextureRect().contains(pd.x,pd.y)){
+                if(playerSprite.getGlobalBounds().contains(pd.x,pd.y)){
                     playerSprite.move(-xChange, -yChange);
-                    xChange *= -3.f;
-                    yChange *= -3.f;
+                    xChange *= -1.f;
+                    yChange *= -1.f;
                     playerSprite.move(xChange, yChange);
                 }
 
