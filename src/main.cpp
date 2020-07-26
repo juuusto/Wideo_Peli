@@ -48,6 +48,12 @@ public:
         text.setFillColor(sf::Color::Red);
         text.setPosition(10, 20);
 
+
+        sf::Text nameTag;
+        nameTag.setFont(font);
+        nameTag.setCharacterSize(24);
+        nameTag.setFillColor(sf::Color::Red);
+
         window.setView(view);
 
         float currentSpeed = 0.f;
@@ -173,9 +179,14 @@ public:
                 
                 for(playerData pd :net_->getPlayerDataAll()){
                     //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
+                    nameTag.setString(pd.name);
+                    nameTag.setPosition(pd.x,pd.y);
                     netSprite.setPosition(pd.x,pd.y);
                     netSprite.setRotation(pd.r);
-                    if(pd.type!=net_->getConId())window.draw(netSprite);
+                    if(pd.type!=net_->getConId()){
+                        window.draw(netSprite);
+                        window.draw(nameTag);
+                    }
                 }
 
             }
@@ -201,13 +212,11 @@ int main()
     std::string addr="";
     std::cout<<"IP (or l for localhost or n for offline play):";
     std::cin >> addr;
-    if(addr=="l") addr="127.0.0.1";
-    Network aa(addr);
+    std::string name="";
+    std::cout<<"Player Name:";
+    std::cin >> name;
 
-    if(addr!="n") aa.connect();
 
-
-    Network *verkko = &aa;
 
 
     std::vector<Tile> tileArr;
@@ -222,7 +231,16 @@ int main()
 
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
 
-    Player pelaaja("Huutis Ukko", "", ajoneuvo);
+    Player pelaaja(name, "", ajoneuvo);
+
+
+    if(addr=="l") addr="127.0.0.1";
+    Network aa(addr);
+    if(addr!="n") aa.connect(pelaaja);
+    Network *verkko = &aa;
+
+
+
 
     Game peli(kartta, pelaaja, verkko);
     

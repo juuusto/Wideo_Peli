@@ -11,6 +11,7 @@ struct playerServerData{
     int r;
     int type;
     std::time_t connectTimeout;
+    std::string name;
 };
 
 
@@ -57,9 +58,9 @@ int main()
         std::cout <<"\n" << tmp_arr[0] <<"\n"<<std::endl;
         std::string res;
         if(tmp_arr[0]=="CONNECT"){
-            std::cout << "Connection... \n"<<std::endl;
-            players.push_back(playerServerData{100,100,0,(int)players.size(),currentTime});
-            if (players.size()-1 < 15){
+            std::cout << "Connection... \n"<< std::to_string(players.size())<<std::endl;
+            if (players.size() < 15){
+                players.push_back(playerServerData{100,100,0,(int)players.size(),currentTime,tmp_arr[1]});
                 res = "OK;"+std::to_string(players.size()-1)+";";
             } else {
                 res = "ERROR;TOO MANY PLAYERS;";
@@ -67,13 +68,20 @@ int main()
 
         } else if (tmp_arr[0]=="UPDATE"){
             std::cout << "Update... \n"<<std::endl;
-            players[stoi(tmp_arr[4])]={stoi(tmp_arr[1]),stoi(tmp_arr[2]),stoi(tmp_arr[3]),stoi(tmp_arr[4]),currentTime};
+            players[stoi(tmp_arr[4])]={stoi(tmp_arr[1]),stoi(tmp_arr[2]),stoi(tmp_arr[3]),stoi(tmp_arr[4]),currentTime,players[stoi(tmp_arr[4])].name};
             res = "";
             for (playerServerData pd: players){
-                if(currentTime-pd.connectTimeout<2)res += std::to_string(pd.x)+";"+std::to_string(pd.y)+";"+std::to_string(pd.r)+";"+std::to_string(pd.type)+";";
+                if(currentTime-pd.connectTimeout<2)res += std::to_string(pd.x)+";"+std::to_string(pd.y)+";"+std::to_string(pd.r)+";"+std::to_string(pd.type)+";"+pd.name+";";
+            }
+        } else if (tmp_arr[0]=="PLAYERS"){
+            std::cout << "Sending Player list... \n"<<std::endl;
+            res = "";
+            int pCount = 0;
+            for (playerServerData pd: players){
+                if(currentTime-pd.connectTimeout<2)pCount +=1;
             }
 
-
+            res += "PLAYERCOUNT;"+std::to_string(pCount)+";";
         } 
         std::cout << res <<"\n"<<std::endl;
         if (socket.send(res.c_str(), res.size()+1, sender, outPort) != sf::Socket::Done)

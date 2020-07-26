@@ -6,6 +6,7 @@ struct playerData{
     int y;
     int r;
     int type;
+    std::string name;
 };
 class Network {
     public:
@@ -21,13 +22,15 @@ class Network {
         data_.clear();
         socket_.unbind();
     }
-    bool connect();
+    std::vector<std::string> parseData(std::string data);
+    bool connect(Player player);
     int getConId();
     bool disconnect();
     bool isConnected();
     void refreshData(playerData pd);
     playerData getPlayerData(int id);
     std::vector<playerData> getPlayerDataAll();
+    int getPlayerCount();
     private:
         std::string serveraddr_;
         unsigned short inPort_;
