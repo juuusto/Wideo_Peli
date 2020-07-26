@@ -138,7 +138,7 @@ public:
             float yChange = currentSpeed * sin((rot / 180.f) * 3.14f);
 
 
-            if(blockX<0 || blockY<0 || blockX>=map_.getMapWidth() || blockY>=map_.getMapHeight()){
+            if(playerX<0 || playerY<0 || blockX>=map_.getMapWidth() || blockY>=map_.getMapHeight()){
                 xChange *=-3.f;
                 yChange *=-3.f;
             } else if(map_.getTile(blockX,blockY).isCollision(offsetInTileX,offsetInTileY)){
@@ -147,7 +147,7 @@ public:
                 yChange *=-3.f;
             }
 
-            
+
             text.setString(
                 "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX,blockY)) + 
                 "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y)+" OffsetXinTile:"+std::to_string(offsetInTileX)+" OffsetYinTile:"+std::to_string(offsetInTileY)
@@ -156,7 +156,7 @@ public:
 
             playerSprite.move(xChange, yChange);
             for(playerData pd :net_->getPlayerDataAll()){
-                if(playerSprite.getGlobalBounds().contains(pd.x,pd.y)){
+                if(pd.type!=net_->getConId() && playerSprite.getGlobalBounds().contains(pd.x,pd.y)){
                     playerSprite.move(-xChange, -yChange);
                     xChange *= -1.f;
                     yChange *= -1.f;

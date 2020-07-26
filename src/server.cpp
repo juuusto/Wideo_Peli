@@ -59,7 +59,16 @@ int main()
         std::string res;
         if(tmp_arr[0]=="CONNECT"){
             std::cout << "Connection... \n"<< std::to_string(players.size())<<std::endl;
-            if (players.size() < 15){
+            int pCount = 0;
+            for (playerServerData pd: players){
+                if(currentTime-pd.connectTimeout<2)pCount +=1;
+            }
+            
+            if(pCount == 0){
+                players.clear();
+            }
+
+            if (pCount < 15){
                 players.push_back(playerServerData{100,100,0,(int)players.size(),currentTime,tmp_arr[1]});
                 res = "OK;"+std::to_string(players.size()-1)+";";
             } else {
