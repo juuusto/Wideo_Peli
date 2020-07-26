@@ -51,8 +51,8 @@ public:
 
         sf::Text nameTag;
         nameTag.setFont(font);
-        nameTag.setCharacterSize(24);
-        nameTag.setFillColor(sf::Color::Red);
+        nameTag.setCharacterSize(16);
+        nameTag.setFillColor(sf::Color::White);
 
         window.setView(view);
 
@@ -147,16 +147,28 @@ public:
                 yChange *=-3.f;
             }
 
-
-            view.move(xChange, yChange);
-            window.setView(view);
+            
             text.setString(
                 "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX,blockY)) + 
                 "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y)+" OffsetXinTile:"+std::to_string(offsetInTileX)+" OffsetYinTile:"+std::to_string(offsetInTileY)
             );
 
-            text.move(xChange, yChange);
+
             playerSprite.move(xChange, yChange);
+            for(playerData pd :net_->getPlayerDataAll()){
+                if(playerSprite.getTextureRect().contains(pd.x,pd.y)){
+                    playerSprite.move(-xChange, -yChange);
+                    xChange *= -3.f;
+                    yChange *= -3.f;
+                    playerSprite.move(xChange, yChange);
+                }
+
+            }
+            view.move(xChange, yChange);
+            window.setView(view);
+            text.move(xChange, yChange);
+
+
 
             window.clear();
 
@@ -180,7 +192,7 @@ public:
                 for(playerData pd :net_->getPlayerDataAll()){
                     //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
                     nameTag.setString(pd.name);
-                    nameTag.setPosition(pd.x,pd.y);
+                    nameTag.setPosition(pd.x-10,pd.y-40);
                     netSprite.setPosition(pd.x,pd.y);
                     netSprite.setRotation(pd.r);
                     if(pd.type!=net_->getConId()){
