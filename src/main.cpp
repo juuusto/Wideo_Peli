@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <vector>
 #include "network.cpp"
+#include "projectile.cpp"
 
 
 
@@ -113,6 +114,44 @@ public:
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
                 rot += player_.getCar().getTurnSpeed();
 
+
+            //shooting
+            Projectile projectile;
+            sf::Texture projTexture;
+            projTexture.loadFromFile("assets/projectile.png");
+            projectile.sprite_.setTexture(projTexture);
+            sf::Vector2f mousePos; 
+            sf::Vector2f aimDirection;
+            sf::Vector2f aimDirectionNorm;
+            sf::Vector2f playerSpriteCenter;
+            
+
+            playerSpriteCenter = sf::Vector2f(playerSprite.getPosition());
+            mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
+            aimDirection = sf::Vector2f( cos(playerSprite.getRotation() * (2*acos(0.0)/180)), sin(playerSprite.getRotation() * (2*acos(0.0)/180) ));
+		    aimDirectionNorm = aimDirection / sqrt( (aimDirection.x * aimDirection.x ) + (aimDirection.y * aimDirection.y ) );
+
+
+            
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+                projectile.sprite_.setPosition(playerSpriteCenter);
+			    projectile.speed_ = aimDirectionNorm * projectile.maxSpeed_;
+			    projectiles_.push_back(Projectile(projectile));
+            }
+
+            for(size_t i = 0; i < projectiles_.size(); i++){
+                projectiles_[i].sprite_.move(projectiles_[i].speed_);
+                
+                if(projectiles_[i].sprite_.getPosition().x < 0 || projectiles_[i].sprite_.getPosition().x > 5000 ||
+                   projectiles_[i].sprite_.getPosition().y < 0 || projectiles_[i].sprite_.getPosition().y > 5000 )
+                   {
+                       projectiles_.erase(projectiles_.begin() + i);
+                   }
+
+            }
+
+
+
             currentSpeed -= player_.getCar().getDrag();
             if (currentSpeed < 0.f)
                 currentSpeed = 0.f;
@@ -153,6 +192,7 @@ public:
                 "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y)+" OffsetXinTile:"+std::to_string(offsetInTileX)+" OffsetYinTile:"+std::to_string(offsetInTileY)
             );
 
+        
 
             playerSprite.move(xChange, yChange);
             for(playerData pd :net_->getPlayerDataAll()){
@@ -164,6 +204,8 @@ public:
                 }
 
             }
+            
+            
             view.move(xChange, yChange);
             window.setView(view);
             text.move(xChange, yChange);
@@ -205,7 +247,9 @@ public:
 
 
 
-
+            for(auto it : projectiles_){
+                window.draw(it.sprite_);
+            }
             window.draw(playerSprite);
             window.draw(text);
             window.display();
@@ -217,6 +261,7 @@ private:
     Map map_;
     Player player_;
     Network* net_;
+    std::vector<Projectile> projectiles_;
 };
 
 int main()
