@@ -1,20 +1,67 @@
 #include "Tile.hpp"
-
-
+#include <fstream>
+#include <iostream>
+#include <string>
 #include "Grid.cpp"
 #include <vector>
 
 class Map {
 public:
-    Map(std::vector<Tile> tileArr, int rectSize, int x, int y, std::vector<int> idArray) :
-    tileArr_(tileArr), rectSize_(rectSize), width(x), height(y), idArray_(idArray) {
+    Map(std::vector<Tile> tileArr, int rectSize, int x, int y, std::vector<int> mapArray) :
+    tileArr_(tileArr), rectSize_(rectSize), width(x), height(y), mapArray_(idArray) {
 
         grid = Grid(x, y);
         grid.setGrid();
     }
+
+    Map(std::string fname) {
+        char byte;
+        int val;
+        int idArraySize;
+        std::ifstream mapf (fname);
+        
+        if(mapf.is_open()) {
+            
+            //Read to width(x). Size is 2 bytes.
+            mapf.read(&byte, 1);
+            val = byte >> 8;
+            mapf.read(&byte, 1);
+            width = val || byte;
+            
+            //Read to height(y). Size is 2 bytes.
+            mapf.read(&byte, 1);
+            val = byte >> 8;
+            mapf.read(&byte, 1);
+            height = val || byte;
+
+            mapf.read(&byte, 1);
+            idArraySize = byte >> 8;
+
+            while(idArraySize > 0) {
+                int id;
+                mapf.read(&byte, 1);
+                id = byte >> 8;
+                //TODO fill array with Tiles
+                id = 0;
+                idArraySize--;
+            }
+
+            int mapDataSize = width*height;
+            while(mapDataSize > 0) {
+                int id;
+                mapf.read(&byte, 1);
+                id = byte >> 8;
+                mapArray_.push_back(id);
+                id = 0;
+                idArraySize--;
+            }
+
+        }
+    }
+
     ~Map(){
         tileArr_.clear();
-        idArray_.clear();
+        mapArray_.clear();
     }
     
     int getMapHeight(); 
@@ -36,6 +83,6 @@ private:
     int rectSize_;
     int width;
     int height;
-    std::vector<int> idArray_;
+    std::vector<int> mapArray_;
     Grid grid;
 };
