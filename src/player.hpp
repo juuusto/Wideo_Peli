@@ -1,7 +1,7 @@
 class Player
 {
 public:
-    Player(std::string name, std::string image, Vehicle car, int x = 0, int y = 0) : x_(0), y_(0), name_(name), image_(image), car_(car){};
+    Player(std::string name, std::string image, Vehicle car, int x = 0, int y = 0, int ammo = 20) : x_(0), y_(0), name_(name), image_(image), car_(car), ammo_(ammo){};
     ~Player(){
         
     }
@@ -21,6 +21,13 @@ public:
     {
         return car_;
     };
+    unsigned int getAmmo()
+    {
+        return ammo_;
+    }
+    void shoot(){
+        ammo_--;
+    }
 
 protected:
     int x_;
@@ -28,6 +35,8 @@ protected:
     std::string name_;
     std::string image_;
     Vehicle car_;
+    int ammo_;
+    
 
 };
 

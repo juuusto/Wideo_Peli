@@ -60,6 +60,7 @@ public:
         float currentSpeed = 0.f;
 
         
+        // loading textures (implement textureloader class?)
         sf::Texture car;
         if (!car.loadFromFile(player_.getCar().getSprite()))
         {
@@ -72,6 +73,13 @@ public:
             return 0;
         }
        
+        sf::Texture projTexture;
+        if(!projTexture.loadFromFile("assets/projectile.png")){
+            return 0;
+        }
+            
+
+
         sf::Sprite playerSprite;
         sf::Sprite netSprite;
         netSprite.move(windowX / 2, windowY / 2);
@@ -86,6 +94,10 @@ public:
         playerSprite.setPosition(playerSprite.getPosition().x + playerSprite.getOrigin().x, playerSprite.getPosition().y + playerSprite.getOrigin().y);
         float rot = playerSprite.getRotation();
         window.setFramerateLimit(60);
+
+        //timer for shooting
+        shootingClock = sf::Clock();
+
         while (window.isOpen())
         {
 
@@ -115,30 +127,31 @@ public:
                 rot += player_.getCar().getTurnSpeed();
 
 
-            //shooting
+            //shooting variables
             Projectile projectile;
-            sf::Texture projTexture;
-            projTexture.loadFromFile("assets/projectile.png");
-            projectile.sprite_.setTexture(projTexture);
-            sf::Vector2f mousePos; 
+            projectile.sprite_.setTexture(projTexture); 
             sf::Vector2f aimDirection;
             sf::Vector2f aimDirectionNorm;
             sf::Vector2f playerSpriteCenter;
             
+            
 
-            playerSpriteCenter = sf::Vector2f(playerSprite.getPosition());
-            mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
-            aimDirection = sf::Vector2f( cos(playerSprite.getRotation() * (2*acos(0.0)/180)), sin(playerSprite.getRotation() * (2*acos(0.0)/180) ));
+            playerSpriteCenter = sf::Vector2f(playerSprite.getPosition().x , playerSprite.getPosition().y);
+            aimDirection = sf::Vector2f( cos(playerSprite.getRotation() * (3.14/180)), sin(playerSprite.getRotation() * (3.14/180) ));
 		    aimDirectionNorm = aimDirection / sqrt( (aimDirection.x * aimDirection.x ) + (aimDirection.y * aimDirection.y ) );
 
 
-            
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
+            //shooting
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player_.getAmmo() > 0 && shootingClock.getElapsedTime().asSeconds() > 3 ){
+                shootingClock.restart();
+                player_.shoot();
                 projectile.sprite_.setPosition(playerSpriteCenter);
 			    projectile.speed_ = aimDirectionNorm * projectile.maxSpeed_;
 			    projectiles_.push_back(Projectile(projectile));
             }
 
+
+            //erasing when projectiles are out of map
             for(size_t i = 0; i < projectiles_.size(); i++){
                 projectiles_[i].sprite_.move(projectiles_[i].speed_);
                 
@@ -189,7 +202,8 @@ public:
 
             text.setString(
                 "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX,blockY)) + 
-                "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y)+" OffsetXinTile:"+std::to_string(offsetInTileX)+" OffsetYinTile:"+std::to_string(offsetInTileY)
+                "   Ammo:" + std::to_string(player_.getAmmo()) + " CD: "+ std::to_string(shootingClock.getElapsedTime().asSeconds()) +
+                "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y)+" OffsetXinTile:"+std::to_string(offsetInTileX)+" OffsetYinTile:"+std::to_string(offsetInTileY)  
             );
 
         
@@ -262,6 +276,7 @@ private:
     Player player_;
     Network* net_;
     std::vector<Projectile> projectiles_;
+    sf::Clock shootingClock;
 };
 
 int main()
