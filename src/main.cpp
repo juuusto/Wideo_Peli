@@ -228,18 +228,7 @@ int main()
     std::cout<<"Player Name:";
     std::cin >> name;
 
-
-
-
-    std::vector<Tile> tileArr;
-    tileArr.push_back(Tile("assets/tile.png"));
-    tileArr.push_back(Tile("assets/tile1.png"));
-    std::vector<int> idArray = {1,1,1,1,1,1,1};
-//return 0;
-    Map kartta(tileArr,200,14,14,idArray);
-    kartta.setTile(0,0,1);
-    //kartta.constructMap();
-        //
+    Map kartta("map1.map");
 
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
 
@@ -252,12 +241,9 @@ int main()
     Network *verkko = &aa;
 
 
-
-
     Game peli(kartta, pelaaja, verkko);
     
     int res = peli.run(800, 600);
-    tileArr.clear();
 
     return res;
 }
