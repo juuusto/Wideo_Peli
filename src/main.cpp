@@ -21,10 +21,9 @@ public:
     ~Game(){
 
     } 
-    int run(int windowX = 800, int windowY = 600)
+    int run(sf::RenderWindow& window, int windowX = 800, int windowY = 600)
     {
         int selectedType =0;         
-        sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
         sf::View view(sf::FloatRect(0.f, 20.f, windowX, windowY - 20.f));
 
 
@@ -221,6 +220,18 @@ private:
 
 int main()
 {
+    int windowX = 800;
+    int windowY = 600;
+    sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
+
+    // jokin dynaaminen menu viritelmä tähän väliin?
+
+
+
+
+
+
+    //näiden arvojen asettamiset & funktioiden ajamiset voisi tapahtua menun kautta
     std::string addr="";
     std::cout<<"IP (or l for localhost or n for offline play):";
     std::cin >> addr;
@@ -242,8 +253,8 @@ int main()
 
 
     Game peli(kartta, pelaaja, verkko);
-    
-    int res = peli.run(800, 600);
+
+    int res = peli.run(window,windowX, windowY);
 
     return res;
 }
