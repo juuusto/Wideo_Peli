@@ -37,6 +37,7 @@ public:
             textures.push_back(aaa);
         }
 
+        sf::Text UItext;
         sf::Text text;
         sf::Font font;
         if (!font.loadFromFile("assets/arial.ttf"))
@@ -48,6 +49,10 @@ public:
         text.setCharacterSize(24);
         text.setFillColor(sf::Color::Red);
         text.setPosition(10, 20);
+        UItext.setFont(font);
+        UItext.setCharacterSize(24);
+        UItext.setFillColor(sf::Color::Green);
+        UItext.setPosition(10, 560);
 
 
         sf::Text nameTag;
@@ -164,7 +169,7 @@ public:
             }
 
 
-            
+
 
             //checking for other players projectiles hitting you
             for(size_t i = 0; i < netProjectiles_.size(); i++){
@@ -214,8 +219,13 @@ public:
 
             text.setString(
                 "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX,blockY)) + 
-                "   Ammo:" + std::to_string(player_.getAmmo()) + " CD: "+ std::to_string(shootingClock.getElapsedTime().asSeconds()) +
+                
                 "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y)+" OffsetXinTile:"+std::to_string(offsetInTileX)+" OffsetYinTile:"+std::to_string(offsetInTileY)  
+            );
+
+
+            UItext.setString(
+                "Ammo:" + std::to_string(player_.getAmmo()) + "     CD: "+ std::to_string(shootingClock.getElapsedTime().asSeconds()) + "       HP: " + std::to_string(player_.getHp()) 
             );
 
         
@@ -235,6 +245,7 @@ public:
             view.move(xChange, yChange);
             window.setView(view);
             text.move(xChange, yChange);
+            UItext.move(xChange,yChange);
 
 
 
@@ -278,6 +289,7 @@ public:
             }
             window.draw(playerSprite);
             window.draw(text);
+            window.draw(UItext);
             window.display();
         }
         return 0;

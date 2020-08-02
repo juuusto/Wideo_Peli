@@ -21,10 +21,14 @@ public:
     {
         return car_;
     };
-    unsigned int getAmmo()
+    int getAmmo()
     {
         return ammo_;
     }
+    int getHp(){
+        return hp_;
+    }
+
     void shoot(){
         ammo_--;
     }
