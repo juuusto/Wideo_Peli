@@ -21,10 +21,9 @@ public:
     ~Game(){
 
     } 
-    int run(int windowX = 800, int windowY = 600)
+    int run(sf::RenderWindow& window, int windowX = 800, int windowY = 600)
     {
         int selectedType =0;         
-        sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
         sf::View view(sf::FloatRect(0.f, 20.f, windowX, windowY - 20.f));
 
 
@@ -221,6 +220,18 @@ private:
 
 int main()
 {
+    int windowX = 800;
+    int windowY = 600;
+    sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
+
+    // jokin dynaaminen menu viritelmä tähän väliin?
+
+
+
+
+
+
+    //näiden arvojen asettamiset & funktioiden ajamiset voisi tapahtua menun kautta
     std::string addr="";
     std::cout<<"IP (or l for localhost or n for offline play):";
     std::cin >> addr;
@@ -228,18 +239,7 @@ int main()
     std::cout<<"Player Name:";
     std::cin >> name;
 
-
-
-
-    std::vector<Tile> tileArr;
-    tileArr.push_back(Tile("assets/tile.png"));
-    tileArr.push_back(Tile("assets/tile1.png"));
-    std::vector<int> idArray = {1,1,1,1,1,1,1};
-//return 0;
-    Map kartta(tileArr,200,14,14,idArray);
-    kartta.setTile(0,0,1);
-    //kartta.constructMap();
-        //
+    Map kartta("map1.map");
 
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
 
@@ -252,12 +252,9 @@ int main()
     Network *verkko = &aa;
 
 
-
-
     Game peli(kartta, pelaaja, verkko);
-    
-    int res = peli.run(800, 600);
-    tileArr.clear();
+
+    int res = peli.run(window,windowX, windowY);
 
     return res;
 }
