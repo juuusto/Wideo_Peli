@@ -142,7 +142,7 @@ public:
 
 
             //shooting
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player_.getAmmo() > 0 && shootingClock.getElapsedTime().asSeconds() > 3 ){
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player_.getAmmo() > 0 && shootingClock.getElapsedTime().asSeconds() > 2 ){
                 shootingClock.restart();
                 player_.shoot();
                 projectile.sprite_.setPosition(playerSpriteCenter);
@@ -160,6 +160,18 @@ public:
                    {
                        projectiles_.erase(projectiles_.begin() + i);
                    }
+
+            }
+
+
+            
+
+            //checking for other players projectiles hitting you
+            for(size_t i = 0; i < netProjectiles_.size(); i++){
+                if(netProjectiles_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
+                    player_.hit();
+                    projectiles_.erase(projectiles_.begin() + i);
+                }
 
             }
 
@@ -277,6 +289,7 @@ private:
     Network* net_;
     std::vector<Projectile> projectiles_;
     sf::Clock shootingClock;
+    std::vector<Projectile> netProjectiles_;
 };
 
 int main()
