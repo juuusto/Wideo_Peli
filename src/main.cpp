@@ -1,5 +1,6 @@
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio/Music.hpp>
 #include <math.h>
 #include "Map.cpp"
 #include "vehicle.hpp"
@@ -24,7 +25,7 @@ public:
     } 
     int run(int windowX = 800, int windowY = 600)
     {
-        int selectedType =0;         
+        int selectedType = 0;         
         sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
         sf::View view(sf::FloatRect(0.f, 20.f, windowX, windowY - 20.f));
 
@@ -82,8 +83,16 @@ public:
         if(!projTexture.loadFromFile("assets/projectile.png")){
             return 0;
         }
-            
+        
+        sf::Music music1; 
+        if (!music1.openFromFile("assets/music1.wav")){
+             return 0; 
+        }
+       
+        //start music
 
+        music1.play();
+        music1.setVolume(5.f);
 
         sf::Sprite playerSprite;
         sf::Sprite netSprite;
@@ -218,8 +227,7 @@ public:
 
 
             text.setString(
-                "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX,blockY)) + 
-                
+                "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX,blockY)) +                
                 "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y)+" OffsetXinTile:"+std::to_string(offsetInTileX)+" OffsetYinTile:"+std::to_string(offsetInTileY)  
             );
 
