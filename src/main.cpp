@@ -10,7 +10,6 @@
 #include "network.cpp"
 
 
-
 class Game
 {
 public:
@@ -25,6 +24,8 @@ public:
     {
         int selectedType =0;         
         sf::View view(sf::FloatRect(0.f, 20.f, windowX, windowY - 20.f));
+
+
 
 
         std::vector<sf::Texture> textures;
@@ -220,24 +221,100 @@ private:
 
 int main()
 {
+    menu:
+
     int windowX = 800;
     int windowY = 600;
-    sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
+    sf::RenderWindow menuWindow(sf::VideoMode(windowX, windowY), "WIDEO PELI");
 
     // jokin dynaaminen menu viritelmä tähän väliin?
 
-
-
-
-
-
-    //näiden arvojen asettamiset & funktioiden ajamiset voisi tapahtua menun kautta
     std::string addr="";
-    std::cout<<"IP (or l for localhost or n for offline play):";
-    std::cin >> addr;
+    int selectedItem = 0;
+
+    sf::Text menuText;
+    sf::Font font;
+    if (!font.loadFromFile("assets/arial.ttf"))
+    {
+        return 0;
+    }
+
+    menuText.setFont(font);
+    menuText.setCharacterSize(40);
+    menuText.setFillColor(sf::Color::Red);
+    menuText.setPosition(windowX / 2, windowY / 2);
+    menuText.setString("Localhost");
+
+    while (menuWindow.isOpen()) {
+
+    sf::Event event;
+
+    std::vector<std::string> items;
+    items.push_back("Localhost");
+    items.push_back("Offline play");
+    items.push_back("Exit");
+
+    while (menuWindow.pollEvent(event))
+    {
+        switch (event.type)
+        {
+            case::sf::Event::Closed:
+                menuWindow.close();
+                break;
+
+            case sf::Event::KeyPressed:
+                switch (event.key.code) {
+                    case sf::Keyboard::Return:
+                    std::cout << "enter" << std::endl;
+                    if (selectedItem == 0 || selectedItem == 1) {
+                        menuWindow.close();
+                        goto game;
+                        break;
+                    } else
+                    {
+                        menuWindow.close();
+                        return 0;
+                    }
+                    
+
+                    case sf::Keyboard::Up:
+                    if (selectedItem > 0) {
+                        selectedItem--;
+                    }
+                    menuText.setString(items[selectedItem]);
+                    std::cout << "up" << std::endl;
+                    break;
+
+                    case sf::Keyboard::Down:
+                    if (selectedItem < 3) {
+                        selectedItem++;
+                    }
+                    menuText.setString(items[selectedItem]);
+                    std::cout << "up" << std::endl;
+                    break;
+                }
+                
+        }
+    }
+    menuWindow.clear();
+    menuWindow.draw(menuText);
+    menuWindow.display();
+
+    }
+
+
+
+    
+    //std::cout<<"IP (or l for localhost or n for offline play):";
+    //std::cin >> addr;
+    
+    game:
+
     std::string name="";
     std::cout<<"Player Name:";
     std::cin >> name;
+
+    sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
 
     Map kartta("map1.map");
 
@@ -246,15 +323,17 @@ int main()
     Player pelaaja(name, "", ajoneuvo);
 
 
-    if(addr=="l") addr="127.0.0.1";
+    if(selectedItem == 0) addr="127.0.0.1";
     Network aa(addr);
-    if(addr!="n") aa.connect(pelaaja);
+    if(selectedItem!=1) aa.connect(pelaaja);
     Network *verkko = &aa;
 
 
     Game peli(kartta, pelaaja, verkko);
 
     int res = peli.run(window,windowX, windowY);
+
+    //goto menu;
 
     return res;
 }
