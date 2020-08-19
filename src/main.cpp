@@ -239,7 +239,7 @@ int main()
     std::cout<<"Player Name:";
     std::cin >> name;
 
-    Map kartta("map1.map");
+    Map kartta("map2.map");
 
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
 

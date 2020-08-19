@@ -6,3 +6,5 @@
 SFML-2.5.1
 serv.exe
 game.exe
+/src/assets/collisionMaker.o
+/src/assets/tileEdit.exe
