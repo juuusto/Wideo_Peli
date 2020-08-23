@@ -8,7 +8,8 @@
 #include <stdio.h>
 #include <vector>
 #include "network.cpp"
-
+#include "tar.cpp"
+#include "boost.cpp"
 
 
 class Game
@@ -23,6 +24,7 @@ public:
     } 
     int run(sf::RenderWindow& window, int windowX = 800, int windowY = 600)
     {
+        
         int selectedType =0;         
         sf::View view(sf::FloatRect(0.f, 20.f, windowX, windowY - 20.f));
 
@@ -69,7 +71,59 @@ public:
         {
             return 0;
         }
+
+
+        sf::Texture tarText;
+        if (!tarText.loadFromFile("assets/tar.png"))
+        {
+            return 0;
+        }
+
        
+        
+        Tar spill;
+        spill.sprite_.setTexture(tarText);
+
+        for(int i = 0 ; i < 17 ; i++){
+            for(int j = 0 ; j < 17 ; j++){
+                int rand0 = rand() % 12;
+                if(map_.getTile(i,j).getTileName() == "assets/tile2.png" && rand0 < 3){
+                    int rand1 = rand() % 160 + 25;
+                    int rand2 = rand() % 160 + 25; 
+                    spill.sprite_.setPosition(i*map_.getBlockSize() + rand1, j * map_.getBlockSize() + rand2);
+                    tarSpills_.push_back(Tar(spill));
+                }
+             
+            }
+        }
+
+/*  
+        sf::Texture boostText;
+        if (!tarText.loadFromFile("assets/boost.png"))
+        {
+            return 0;
+        }
+
+        Boost boost;
+        boost.sprite_.setTexture(boostText);
+
+        for(int i = 0 ; i < 17 ; i++){
+            for(int j = 0 ; j < 17 ; j++){
+                int rand0 = rand() % 12;
+                if(map_.getTile(i,j).getTileName() == "assets/tile2.png" && rand0 < 3){
+                    int rand1 = rand() % 160 + 25;
+                    int rand2 = rand() % 160 + 25; 
+                    boost.sprite_.setPosition(i*map_.getBlockSize() + rand1, j * map_.getBlockSize() + rand2);
+                    boosts_.push_back(Boost(boost));
+                }
+             
+            }
+        } 
+*/
+
+       
+
+
         sf::Sprite playerSprite;
         sf::Sprite netSprite;
         netSprite.move(windowX / 2, windowY / 2);
@@ -135,6 +189,16 @@ public:
 
             float xChange = currentSpeed * cos((rot / 180.f) * 3.14f);
             float yChange = currentSpeed * sin((rot / 180.f) * 3.14f);
+
+
+            //check if hit tar
+            for(size_t i = 0; i < tarSpills_.size(); i++){
+                if(tarSpills_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
+                    currentSpeed = 0;
+                    tarSpills_.erase(tarSpills_.begin() + i);
+                }
+
+            }
 
 
             if(playerX<0 || playerY<0 || blockX>=map_.getMapWidth() || blockY>=map_.getMapHeight()){
@@ -203,8 +267,13 @@ public:
             }
 
 
-
-
+            for(auto it : tarSpills_){
+                window.draw(it.sprite_);
+            }
+            /*
+            for(auto it : boosts_){
+                window.draw(it.sprite_);
+            }*/
             window.draw(playerSprite);
             window.draw(text);
             window.display();
@@ -216,6 +285,8 @@ private:
     Map map_;
     Player player_;
     Network* net_;
+    std::vector<Tar> tarSpills_;
+    std::vector<Boost> boosts_;
 };
 
 int main()
@@ -253,7 +324,7 @@ int main()
 
 
     Game peli(kartta, pelaaja, verkko);
-
+    
     int res = peli.run(window,windowX, windowY);
 
     return res;
