@@ -97,7 +97,7 @@ public:
             }
         }
 
-/*  
+
         sf::Texture boostText;
         if (!tarText.loadFromFile("assets/boost.png"))
         {
@@ -109,17 +109,17 @@ public:
 
         for(int i = 0 ; i < 17 ; i++){
             for(int j = 0 ; j < 17 ; j++){
-                int rand0 = rand() % 12;
-                if(map_.getTile(i,j).getTileName() == "assets/tile2.png" && rand0 < 3){
-                    int rand1 = rand() % 160 + 25;
-                    int rand2 = rand() % 160 + 25; 
-                    boost.sprite_.setPosition(i*map_.getBlockSize() + rand1, j * map_.getBlockSize() + rand2);
+                int rand3 = rand() % 12;
+                if(map_.getTile(i,j).getTileName() == "assets/tile2.png" && rand3 < 3){
+                    int rand4 = rand() % 160 + 25;
+                    int rand5 = rand() % 160 + 25; 
+                    boost.sprite_.setPosition(i*map_.getBlockSize() + rand4, j * map_.getBlockSize() + rand5);
                     boosts_.push_back(Boost(boost));
                 }
              
             }
         } 
-*/
+
 
        
 
@@ -169,7 +169,7 @@ public:
             currentSpeed -= player_.getCar().getDrag();
             if (currentSpeed < 0.f)
                 currentSpeed = 0.f;
-            else if (currentSpeed > player_.getCar().getMaxSpeed())
+            else if (currentSpeed > player_.getCar().getMaxSpeed() && boostClock.getElapsedTime().asSeconds() > 3)
                 currentSpeed = player_.getCar().getMaxSpeed();
             if (rot > 360.f)
                 rot = 0.f;
@@ -191,11 +191,20 @@ public:
             float yChange = currentSpeed * sin((rot / 180.f) * 3.14f);
 
 
-            //check if hit tar
+            //check if hit game object
             for(size_t i = 0; i < tarSpills_.size(); i++){
                 if(tarSpills_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
                     currentSpeed = 0;
                     tarSpills_.erase(tarSpills_.begin() + i);
+                }
+
+            }
+
+              for(size_t i = 0; i < boosts_.size(); i++){
+                if(boosts_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
+                    boostClock.restart();
+                    currentSpeed = 30;
+                    boosts_.erase(boosts_.begin() + i);
                 }
 
             }
@@ -265,15 +274,16 @@ public:
                 }
 
             }
-
+            std::cout << std::to_string(tarSpills_.size()) << std::endl;
+            std::cout << std::to_string(boosts_.size()) << std::endl;
 
             for(auto it : tarSpills_){
                 window.draw(it.sprite_);
             }
-            /*
+            
             for(auto it : boosts_){
                 window.draw(it.sprite_);
-            }*/
+            }
             window.draw(playerSprite);
             window.draw(text);
             window.display();
@@ -287,6 +297,7 @@ private:
     Network* net_;
     std::vector<Tar> tarSpills_;
     std::vector<Boost> boosts_;
+    sf::Clock boostClock;
 };
 
 int main()
