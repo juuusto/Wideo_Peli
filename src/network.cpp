@@ -2,7 +2,6 @@
 #include <iostream>
 #include "network.hpp"
 
-
 std::vector<std::string> Network::parseData(std::string data){
     std::vector<std::string> retVec;
     size_t pos = 0;
@@ -96,6 +95,50 @@ void Network::refreshData(playerData pd)
     }
     socket_.setBlocking(false);
 }
+
+
+void Network::refreshAssetData(std::vector<Projectile> pr)
+{
+    socket_.setBlocking(true);
+    sf::IpAddress recipient = serveraddr_;
+    std::string data2 = "UASSETS;"+std::to_string(conId_)+";";
+    for(Projectile aa: pr){
+        data2+=std::to_string(aa.sprite_.getPosition().x)+";"+std::to_string(aa.sprite_.getPosition().y)+";";
+    }
+     //+ std::to_string(pd.x) + ";" + std::to_string(pd.y) + ";" + std::to_string(pd.r) + ";" + std::to_string(pd.type) + ";";
+    if (socket_.send(data2.c_str(), data2.size() + 1, recipient, outPort_) != sf::Socket::Done)
+    {
+        // error...
+    }
+
+    sf::IpAddress sender;
+    char data[300];
+    std::size_t received;
+    unsigned short port;
+    if (socket_.receive(data, 100, received, sender, port) != sf::Socket::Done)
+    {
+        // error...
+    }
+
+    if (received == 0)
+        return;
+    std::string s(data);
+
+    try
+    {
+        std::vector<std::string> tmpData = this->parseData(s);
+        if (tmpData.size() > 0)
+            projdata_.clear();
+        for (int j = 0; j < tmpData.size(); j += 2)
+        {
+            projdata_.push_back(std::pair<int,int>(std::stoi(tmpData[j]), std::stoi(tmpData[j + 1])));
+        }
+    }
+    catch (const std::exception &e)
+    {
+    }
+    socket_.setBlocking(false);
+}
 playerData Network::getPlayerData(int id)
 {
     return data_[id];
@@ -104,6 +147,11 @@ std::vector<playerData> Network::getPlayerDataAll()
 {
     return data_;
 }
+std::vector<std::pair<int,int>> Network::getProjectileDataAll()
+{
+    return projdata_;
+}
+
 int Network::getPlayerCount()
 {
     return data_.size();

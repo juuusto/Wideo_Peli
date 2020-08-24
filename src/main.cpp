@@ -8,8 +8,9 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
+#include "projectile.hpp"
 #include "network.cpp"
-#include "projectile.cpp"
+
 
 
 
@@ -96,6 +97,8 @@ public:
 
         sf::Sprite playerSprite;
         sf::Sprite netSprite;
+        sf::Sprite netprojSprite;
+        netprojSprite.setTexture(projTexture); 
         netSprite.move(windowX / 2, windowY / 2);
         netSprite.setTexture(otherCar);
         netSprite.setOrigin(otherCar.getSize().x * 0.5f, otherCar.getSize().y * 0.5f);
@@ -278,7 +281,16 @@ public:
 
             if(net_->isConnected()){
                 net_->refreshData(playerData{(int)playerX,(int)playerY,(int)rot,net_->getConId()});
-                
+                net_->refreshAssetData(projectiles_);
+
+                for(std::pair<int,int> pro :net_->getProjectileDataAll()){
+                    //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
+
+                    netprojSprite.setPosition(pro.first,pro.second);
+                    window.draw(netprojSprite);
+                }
+
+
                 for(playerData pd :net_->getPlayerDataAll()){
                     //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
                     nameTag.setString(pd.name);
@@ -355,6 +367,7 @@ std::vector<std::string> mainMenu(sf::RenderWindow& window, int windowX = 800, i
     window.setFramerateLimit(12);
 
     while (menuOpt!=3 && window.isOpen()){
+        bool allowReturn = true;
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -367,16 +380,17 @@ std::vector<std::string> mainMenu(sf::RenderWindow& window, int windowX = 800, i
                 break;
             }
         }
-window.clear();
-window.draw(menuS);
+        window.clear();
+        window.draw(menuS);
 
 
         if(textInputOn){
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
                 textInputOn = false;
                 menuOpt = -1;
+                allowReturn = false;
             } else {
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Backspace)) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
                     resvector[valueToEdit] = resvector[valueToEdit].substr(0, resvector[valueToEdit].size()-1);
                 } else if (event.type == sf::Event::TextEntered) {
                     resvector[valueToEdit] +=event.text.unicode;
@@ -405,7 +419,7 @@ window.draw(menuS);
 
         if (tmpOpt<0) tmpOpt=0;
         else if (tmpOpt>=myvector.size())tmpOpt=myvector.size()-1;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && allowReturn)
             menuOpt = tmpOpt;
 
 
@@ -418,9 +432,9 @@ window.draw(menuS);
             textInputOn = true;
             valueToEdit = 0;
             inputTextVal = 0;
-            menuOpt = 3;
+            //menuOpt = 3;
         } else if(menuOpt == 1){
-            resvector[valueToEdit] = "127.0.0.1";
+            //resvector[valueToEdit] = "127.0.0.1";
             menuOpt = 3;
         } else if(menuOpt == 3){
             window.close();
@@ -466,7 +480,7 @@ int main()
     //näiden arvojen asettamiset & funktioiden ajamiset voisi tapahtua menun kautta
     std::string addr=menuOpts[0];
     std::string name=menuOpts[1];
-
+    std::cout << addr << "  " << name << std::endl;
     Map kartta("map2.map");
 
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
