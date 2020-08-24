@@ -1,6 +1,6 @@
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio/Music.hpp>
+#include <SFML/Audio.hpp>
 #include <math.h>
 #include "Map.cpp"
 #include "vehicle.hpp"
@@ -84,15 +84,16 @@ public:
             return 0;
         }
         
-        sf::Music music1; 
-        if (!music1.openFromFile("assets/music1.wav")){
-             return 0; 
+        sf::SoundBuffer shootingBuff;
+        if(!shootingBuff.loadFromFile("assets/shoot.wav")){
+            return 0;
         }
-       
-        //start music
 
-        music1.play();
-        music1.setVolume(5.f);
+        sf::Sound shootingSound;
+        shootingSound.setBuffer(shootingBuff);
+        shootingSound.setVolume(10.f);
+       
+
 
         sf::Sprite playerSprite;
         sf::Sprite netSprite;
@@ -156,9 +157,13 @@ public:
 
 
             //shooting
+     
+
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player_.getAmmo() > 0 && shootingClock.getElapsedTime().asSeconds() > 2 ){
                 shootingClock.restart();
                 player_.shoot();
+                
+                shootingSound.play();
                 projectile.sprite_.setPosition(playerSpriteCenter);
 			    projectile.speed_ = aimDirectionNorm * projectile.maxSpeed_;
 			    projectiles_.push_back(Projectile(projectile));
