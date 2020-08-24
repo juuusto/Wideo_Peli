@@ -8,8 +8,9 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
+#include "projectile.hpp"
 #include "network.cpp"
-#include "projectile.cpp"
+
 
 
 
@@ -278,7 +279,7 @@ public:
 
             if(net_->isConnected()){
                 net_->refreshData(playerData{(int)playerX,(int)playerY,(int)rot,net_->getConId()});
-                
+                net_->refreshAssetData(projectiles_);
                 for(playerData pd :net_->getPlayerDataAll()){
                     //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
                     nameTag.setString(pd.name);

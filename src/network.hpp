@@ -28,6 +28,7 @@ class Network {
     bool disconnect();
     bool isConnected();
     void refreshData(playerData pd);
+    void refreshAssetData(std::vector<Projectile> pr);
     playerData getPlayerData(int id);
     std::vector<playerData> getPlayerDataAll();
     int getPlayerCount();
@@ -38,5 +39,6 @@ class Network {
         bool connected_;
         sf::UdpSocket socket_;
         std::vector<playerData> data_;
+        std::vector<std::pair<int,int>> projdata_;
         int conId_;
 };
