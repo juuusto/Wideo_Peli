@@ -31,6 +31,7 @@ class Network {
     void refreshAssetData(std::vector<Projectile> pr);
     playerData getPlayerData(int id);
     std::vector<playerData> getPlayerDataAll();
+    std::vector<std::pair<int,int>> getProjectileDataAll();
     int getPlayerCount();
     private:
         std::string serveraddr_;

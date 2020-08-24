@@ -147,6 +147,11 @@ std::vector<playerData> Network::getPlayerDataAll()
 {
     return data_;
 }
+std::vector<std::pair<int,int>> Network::getProjectileDataAll()
+{
+    return projdata_;
+}
+
 int Network::getPlayerCount()
 {
     return data_.size();
