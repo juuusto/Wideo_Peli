@@ -218,6 +218,141 @@ private:
     Network* net_;
 };
 
+std::vector<std::string> mainMenu(sf::RenderWindow& window, int windowX = 800, int windowY = 600){
+    int menuOpt = -1;
+    int tmpOpt = 0;
+    int valueToEdit = 0;
+    int inputTextVal= 0;
+    std::vector<std::string> resvector;
+    resvector.push_back ("127.0.0.1");
+    resvector.push_back ("unknown peli ukko");
+    std::vector<std::string> inputTextvector;
+    inputTextvector.push_back ("Address");
+    inputTextvector.push_back ("Player Name");
+    std::vector<std::string> myvector;
+    myvector.push_back ("Player Name");
+    myvector.push_back ("New Game");
+    myvector.push_back ("Network Play");
+    myvector.push_back ("Quit");
+
+
+    sf::Text text;
+    sf::Font font;
+    if (!font.loadFromFile("assets/arial.ttf"))
+    {
+        return resvector;
+    }
+    sf::Texture menuTEX;
+    if (!menuTEX.loadFromFile("assets/menu.png"))
+    {
+        return resvector;
+    }
+    sf::Sprite menuS;
+    menuS.setTexture(menuTEX);
+    text.setFont(font);
+    text.setCharacterSize(24);
+    text.setFillColor(sf::Color::White);
+    //text.setPosition(10, 20);
+    std::string textInput;
+    bool textInputOn = false;
+    window.setFramerateLimit(12);
+
+    while (menuOpt!=3 && window.isOpen()){
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            switch (event.type)
+            {
+            case sf::Event::Closed:
+                window.close();
+                break;
+            default:
+                break;
+            }
+        }
+window.clear();
+window.draw(menuS);
+
+
+        if(textInputOn){
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+                textInputOn = false;
+                menuOpt = -1;
+            } else {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Backspace)) {
+                    resvector[valueToEdit] = resvector[valueToEdit].substr(0, resvector[valueToEdit].size()-1);
+                } else if (event.type == sf::Event::TextEntered) {
+                    resvector[valueToEdit] +=event.text.unicode;
+                }
+            
+                //window.clear();
+                text.setPosition(10, 20);
+                text.setString(inputTextvector[inputTextVal]+":\n");
+                window.draw(text);
+                text.setPosition(10, 54);
+                text.setString(resvector[valueToEdit]);
+                window.draw(text);
+                window.display();
+                continue;  
+            }
+
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            window.close();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            tmpOpt-=1;
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            tmpOpt+=1;
+
+
+        if (tmpOpt<0) tmpOpt=0;
+        else if (tmpOpt>=myvector.size())tmpOpt=myvector.size()-1;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            menuOpt = tmpOpt;
+
+
+    // set conn addr
+        if(menuOpt == 0){
+            textInputOn = true;
+            valueToEdit = 1;
+            inputTextVal = 1;
+        } else if(menuOpt == 2){
+            textInputOn = true;
+            valueToEdit = 0;
+            inputTextVal = 0;
+            menuOpt = 3;
+        } else if(menuOpt == 1){
+            resvector[valueToEdit] = "127.0.0.1";
+            menuOpt = 3;
+        } else if(menuOpt == 3){
+            window.close();
+        } 
+
+
+        //window.clear();
+        for(int menu1 = 0; menu1<myvector.size(); menu1++){
+            text.setFillColor(sf::Color::White);
+            if (menu1 == tmpOpt){
+                text.setFillColor(sf::Color::Red);
+            }
+            text.setPosition(10, 20+menu1*24);
+            text.setString(myvector[menu1]);
+            
+            window.draw(text);
+
+        }
+        
+        window.display();
+    }
+    
+
+
+
+
+}
+
+
 int main()
 {
     int windowX = 800;
@@ -226,18 +361,14 @@ int main()
 
     // jokin dynaaminen menu viritelmä tähän väliin?
 
-
+    std::vector<std::string> menuOpts = mainMenu(window,windowX, windowY);
 
 
 
 
     //näiden arvojen asettamiset & funktioiden ajamiset voisi tapahtua menun kautta
-    std::string addr="";
-    std::cout<<"IP (or l for localhost or n for offline play):";
-    std::cin >> addr;
-    std::string name="";
-    std::cout<<"Player Name:";
-    std::cin >> name;
+    std::string addr=menuOpts[0];
+    std::string name=menuOpts[1];
 
     Map kartta("map2.map");
 
@@ -246,7 +377,7 @@ int main()
     Player pelaaja(name, "", ajoneuvo);
 
 
-    if(addr=="l") addr="127.0.0.1";
+
     Network aa(addr);
     if(addr!="n") aa.connect(pelaaja);
     Network *verkko = &aa;
