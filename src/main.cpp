@@ -373,11 +373,11 @@ window.draw(menuS);
 
 
         if(textInputOn){
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
                 textInputOn = false;
                 menuOpt = -1;
             } else {
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Backspace)) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
                     resvector[valueToEdit] = resvector[valueToEdit].substr(0, resvector[valueToEdit].size()-1);
                 } else if (event.type == sf::Event::TextEntered) {
                     resvector[valueToEdit] +=event.text.unicode;
@@ -419,9 +419,9 @@ window.draw(menuS);
             textInputOn = true;
             valueToEdit = 0;
             inputTextVal = 0;
-            menuOpt = 3;
+            //menuOpt = 3;
         } else if(menuOpt == 1){
-            resvector[valueToEdit] = "127.0.0.1";
+            //resvector[valueToEdit] = "127.0.0.1";
             menuOpt = 3;
         } else if(menuOpt == 3){
             window.close();
@@ -467,7 +467,7 @@ int main()
     //näiden arvojen asettamiset & funktioiden ajamiset voisi tapahtua menun kautta
     std::string addr=menuOpts[0];
     std::string name=menuOpts[1];
-
+    std::cout << addr << "  " << name << std::endl;
     Map kartta("map2.map");
 
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);

@@ -95,7 +95,7 @@ int main()
 
             projData[stoi(tmp_arr[1])].clear();
             for(int pri = 2; pri<tmp_arr.size();pri+=2){
-                projData[stoi(tmp_arr[1])].push_back({stoi(tmp_arr[1]),stoi(tmp_arr[2])});
+                projData[stoi(tmp_arr[1])].push_back({stoi(tmp_arr[pri]),stoi(tmp_arr[pri+1])});
             }
 
             res = "";
