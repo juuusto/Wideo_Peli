@@ -1,5 +1,6 @@
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <math.h>
 #include "Map.cpp"
 #include "vehicle.hpp"
@@ -8,6 +9,7 @@
 #include <stdio.h>
 #include <vector>
 #include "network.cpp"
+#include "projectile.cpp"
 
 
 
@@ -35,6 +37,7 @@ public:
             textures.push_back(aaa);
         }
 
+        sf::Text UItext;
         sf::Text text;
         sf::Font font;
         if (!font.loadFromFile("assets/arial.ttf"))
@@ -46,6 +49,10 @@ public:
         text.setCharacterSize(24);
         text.setFillColor(sf::Color::Red);
         text.setPosition(10, 20);
+        UItext.setFont(font);
+        UItext.setCharacterSize(24);
+        UItext.setFillColor(sf::Color::Green);
+        UItext.setPosition(10, 560);
 
 
         sf::Text nameTag;
@@ -58,6 +65,7 @@ public:
         float currentSpeed = 0.f;
 
         
+        // loading textures (implement textureloader class?)
         sf::Texture car;
         if (!car.loadFromFile(player_.getCar().getSprite()))
         {
@@ -70,6 +78,22 @@ public:
             return 0;
         }
        
+        sf::Texture projTexture;
+        if(!projTexture.loadFromFile("assets/projectile.png")){
+            return 0;
+        }
+        
+        sf::SoundBuffer shootingBuff;
+        if(!shootingBuff.loadFromFile("assets/shoot.wav")){
+            return 0;
+        }
+
+        sf::Sound shootingSound;
+        shootingSound.setBuffer(shootingBuff);
+        shootingSound.setVolume(10.f);
+       
+
+
         sf::Sprite playerSprite;
         sf::Sprite netSprite;
         netSprite.move(windowX / 2, windowY / 2);
@@ -84,6 +108,10 @@ public:
         playerSprite.setPosition(playerSprite.getPosition().x + playerSprite.getOrigin().x, playerSprite.getPosition().y + playerSprite.getOrigin().y);
         float rot = playerSprite.getRotation();
         window.setFramerateLimit(60);
+
+        //timer for shooting
+        shootingClock = sf::Clock();
+
         while (window.isOpen())
         {
 
@@ -111,6 +139,60 @@ public:
                 rot -= player_.getCar().getTurnSpeed();
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
                 rot += player_.getCar().getTurnSpeed();
+
+
+            //shooting variables
+            Projectile projectile;
+            projectile.sprite_.setTexture(projTexture); 
+            sf::Vector2f aimDirection;
+            sf::Vector2f aimDirectionNorm;
+            sf::Vector2f playerSpriteCenter;
+            
+            
+
+            playerSpriteCenter = sf::Vector2f(playerSprite.getPosition().x , playerSprite.getPosition().y);
+            aimDirection = sf::Vector2f( cos(playerSprite.getRotation() * (3.14/180)), sin(playerSprite.getRotation() * (3.14/180) ));
+		    aimDirectionNorm = aimDirection / sqrt( (aimDirection.x * aimDirection.x ) + (aimDirection.y * aimDirection.y ) );
+
+
+            //shooting
+     
+
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player_.getAmmo() > 0 && shootingClock.getElapsedTime().asSeconds() > 2 ){
+                shootingClock.restart();
+                player_.shoot();
+                shootingSound.play();
+                projectile.sprite_.setPosition(playerSpriteCenter);
+			    projectile.speed_ = aimDirectionNorm * projectile.maxSpeed_;
+			    projectiles_.push_back(Projectile(projectile));
+            }
+
+
+            //erasing when projectiles are out of map
+            for(size_t i = 0; i < projectiles_.size(); i++){
+                projectiles_[i].sprite_.move(projectiles_[i].speed_);
+                
+                if(projectiles_[i].sprite_.getPosition().x < 0 || projectiles_[i].sprite_.getPosition().x > 5000 ||
+                   projectiles_[i].sprite_.getPosition().y < 0 || projectiles_[i].sprite_.getPosition().y > 5000 )
+                   {
+                       projectiles_.erase(projectiles_.begin() + i);
+                   }
+
+            }
+
+
+
+
+            //checking for other players projectiles hitting you
+            for(size_t i = 0; i < netProjectiles_.size(); i++){
+                if(netProjectiles_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
+                    player_.hit();
+                    netProjectiles_.erase(netProjectiles_.begin() + i);
+                }
+
+            }
+
+
 
             currentSpeed -= player_.getCar().getDrag();
             if (currentSpeed < 0.f)
@@ -148,10 +230,16 @@ public:
 
 
             text.setString(
-                "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX,blockY)) + 
-                "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y)+" OffsetXinTile:"+std::to_string(offsetInTileX)+" OffsetYinTile:"+std::to_string(offsetInTileY)
+                "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX,blockY)) +                
+                "\nW:" + std::to_string(view.getSize().x)+" H:" + std::to_string(view.getSize().y)+" OffsetXinTile:"+std::to_string(offsetInTileX)+" OffsetYinTile:"+std::to_string(offsetInTileY)  
             );
 
+
+            UItext.setString(
+                "Ammo:" + std::to_string(player_.getAmmo()) + "     CD: "+ std::to_string(shootingClock.getElapsedTime().asSeconds()) + "       HP: " + std::to_string(player_.getHp()) 
+            );
+
+        
 
             playerSprite.move(xChange, yChange);
             for(playerData pd :net_->getPlayerDataAll()){
@@ -163,9 +251,12 @@ public:
                 }
 
             }
+            
+            
             view.move(xChange, yChange);
             window.setView(view);
             text.move(xChange, yChange);
+            UItext.move(xChange,yChange);
 
 
 
@@ -204,9 +295,12 @@ public:
 
 
 
-
+            for(auto it : projectiles_){
+                window.draw(it.sprite_);
+            }
             window.draw(playerSprite);
             window.draw(text);
+            window.draw(UItext);
             window.display();
         }
         return 0;
@@ -216,6 +310,9 @@ private:
     Map map_;
     Player player_;
     Network* net_;
+    std::vector<Projectile> projectiles_;
+    sf::Clock shootingClock;
+    std::vector<Projectile> netProjectiles_;
 };
 
 std::vector<std::string> mainMenu(sf::RenderWindow& window, int windowX = 800, int windowY = 600){
