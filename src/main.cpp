@@ -162,7 +162,6 @@ public:
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player_.getAmmo() > 0 && shootingClock.getElapsedTime().asSeconds() > 2 ){
                 shootingClock.restart();
                 player_.shoot();
-                
                 shootingSound.play();
                 projectile.sprite_.setPosition(playerSpriteCenter);
 			    projectile.speed_ = aimDirectionNorm * projectile.maxSpeed_;
@@ -189,7 +188,7 @@ public:
             for(size_t i = 0; i < netProjectiles_.size(); i++){
                 if(netProjectiles_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
                     player_.hit();
-                    projectiles_.erase(projectiles_.begin() + i);
+                    netProjectiles_.erase(netProjectiles_.begin() + i);
                 }
 
             }
