@@ -1,5 +1,6 @@
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio/Music.hpp>
 #include <math.h>
 #include "Map.cpp"
 #include "vehicle.hpp"
@@ -8,6 +9,7 @@
 #include <stdio.h>
 #include <vector>
 #include "network.cpp"
+
 
 
 
@@ -42,16 +44,25 @@ public:
             return 0;
         }
 
+        sf::Music music1; 
+        if (!music1.openFromFile("assets/"+ map_.getMusicFile())){
+             return 0; 
+        }
+
+        music1.play();
+        music1.setVolume(1);
+
+
         text.setFont(font);
         text.setCharacterSize(24);
-        text.setFillColor(sf::Color::Red);
+        text.setColor(sf::Color::Red);
         text.setPosition(10, 20);
 
 
         sf::Text nameTag;
         nameTag.setFont(font);
         nameTag.setCharacterSize(16);
-        nameTag.setFillColor(sf::Color::White);
+        nameTag.setColor(sf::Color::White);
 
         window.setView(view);
 

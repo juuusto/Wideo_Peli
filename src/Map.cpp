@@ -19,6 +19,8 @@ int Map::getBlockSize(){
 
 Tile Map::getTile(int id) { return tileArr_[id];}
 
+std::string& Map::getMusicFile() {return musicFname;}
+
 Tile Map::getTile(int x, int y) { return tileArr_[grid.getTileAtCoordinate(x,y)];}
 
 int Map::getTileId(int x, int y){

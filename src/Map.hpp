@@ -37,9 +37,18 @@ public:
         int idArraySize;
         rectSize_=200;
         std::ifstream mapf ("./assets/"+fname);
+        std::string music = "";
         
         if(mapf.is_open()) {
             
+            for(int i = 0; i < 8; i++) {
+                mapf.read(&byte,1);
+                music += byte;
+                byte >> 8;
+            }
+            music += ".wav";
+            musicFname = music;
+
             //Read to width(x). Size is 2 bytes.
             mapf.read(&byte, 1);
             val = byte << 8;
@@ -93,6 +102,8 @@ public:
 
     void constructMap();
 
+    std::string& getMusicFile();
+
     int getBlockSize();
 
     Tile getTile(int id);
@@ -108,4 +119,5 @@ private:
     int height;
     std::vector<int> mapArray_;
     Grid grid;
+    std::string musicFname;
 };
