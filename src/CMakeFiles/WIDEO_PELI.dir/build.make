@@ -153,76 +153,28 @@ CMakeFiles/WIDEO_PELI.dir/Map.cpp.o.provides: CMakeFiles/WIDEO_PELI.dir/Map.cpp.
 CMakeFiles/WIDEO_PELI.dir/Map.cpp.o.provides.build: CMakeFiles/WIDEO_PELI.dir/Map.cpp.o
 
 
-CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o: CMakeFiles/WIDEO_PELI.dir/flags.make
-CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o: Menu.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/Menu.cpp
+CMakeFiles/WIDEO_PELI.dir/tar.cpp.o: CMakeFiles/WIDEO_PELI.dir/flags.make
+CMakeFiles/WIDEO_PELI.dir/tar.cpp.o: tar.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/WIDEO_PELI.dir/tar.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WIDEO_PELI.dir/tar.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/tar.cpp
 
-CMakeFiles/WIDEO_PELI.dir/Menu.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WIDEO_PELI.dir/Menu.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/juuusto/cplusplus/micro-machines-2020-1/src/Menu.cpp > CMakeFiles/WIDEO_PELI.dir/Menu.cpp.i
+CMakeFiles/WIDEO_PELI.dir/tar.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WIDEO_PELI.dir/tar.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/juuusto/cplusplus/micro-machines-2020-1/src/tar.cpp > CMakeFiles/WIDEO_PELI.dir/tar.cpp.i
 
-CMakeFiles/WIDEO_PELI.dir/Menu.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WIDEO_PELI.dir/Menu.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/juuusto/cplusplus/micro-machines-2020-1/src/Menu.cpp -o CMakeFiles/WIDEO_PELI.dir/Menu.cpp.s
+CMakeFiles/WIDEO_PELI.dir/tar.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WIDEO_PELI.dir/tar.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/juuusto/cplusplus/micro-machines-2020-1/src/tar.cpp -o CMakeFiles/WIDEO_PELI.dir/tar.cpp.s
 
-CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o.requires:
+CMakeFiles/WIDEO_PELI.dir/tar.cpp.o.requires:
 
-.PHONY : CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o.requires
+.PHONY : CMakeFiles/WIDEO_PELI.dir/tar.cpp.o.requires
 
-CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o.provides: CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o.requires
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o.provides.build
-.PHONY : CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o.provides
+CMakeFiles/WIDEO_PELI.dir/tar.cpp.o.provides: CMakeFiles/WIDEO_PELI.dir/tar.cpp.o.requires
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/tar.cpp.o.provides.build
+.PHONY : CMakeFiles/WIDEO_PELI.dir/tar.cpp.o.provides
 
-CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o.provides.build: CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o
-
-
-CMakeFiles/WIDEO_PELI.dir/network.cpp.o: CMakeFiles/WIDEO_PELI.dir/flags.make
-CMakeFiles/WIDEO_PELI.dir/network.cpp.o: network.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/WIDEO_PELI.dir/network.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WIDEO_PELI.dir/network.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/network.cpp
-
-CMakeFiles/WIDEO_PELI.dir/network.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WIDEO_PELI.dir/network.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/juuusto/cplusplus/micro-machines-2020-1/src/network.cpp > CMakeFiles/WIDEO_PELI.dir/network.cpp.i
-
-CMakeFiles/WIDEO_PELI.dir/network.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WIDEO_PELI.dir/network.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/juuusto/cplusplus/micro-machines-2020-1/src/network.cpp -o CMakeFiles/WIDEO_PELI.dir/network.cpp.s
-
-CMakeFiles/WIDEO_PELI.dir/network.cpp.o.requires:
-
-.PHONY : CMakeFiles/WIDEO_PELI.dir/network.cpp.o.requires
-
-CMakeFiles/WIDEO_PELI.dir/network.cpp.o.provides: CMakeFiles/WIDEO_PELI.dir/network.cpp.o.requires
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/network.cpp.o.provides.build
-.PHONY : CMakeFiles/WIDEO_PELI.dir/network.cpp.o.provides
-
-CMakeFiles/WIDEO_PELI.dir/network.cpp.o.provides.build: CMakeFiles/WIDEO_PELI.dir/network.cpp.o
-
-
-CMakeFiles/WIDEO_PELI.dir/server.cpp.o: CMakeFiles/WIDEO_PELI.dir/flags.make
-CMakeFiles/WIDEO_PELI.dir/server.cpp.o: server.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/WIDEO_PELI.dir/server.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WIDEO_PELI.dir/server.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/server.cpp
-
-CMakeFiles/WIDEO_PELI.dir/server.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WIDEO_PELI.dir/server.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/juuusto/cplusplus/micro-machines-2020-1/src/server.cpp > CMakeFiles/WIDEO_PELI.dir/server.cpp.i
-
-CMakeFiles/WIDEO_PELI.dir/server.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WIDEO_PELI.dir/server.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/juuusto/cplusplus/micro-machines-2020-1/src/server.cpp -o CMakeFiles/WIDEO_PELI.dir/server.cpp.s
-
-CMakeFiles/WIDEO_PELI.dir/server.cpp.o.requires:
-
-.PHONY : CMakeFiles/WIDEO_PELI.dir/server.cpp.o.requires
-
-CMakeFiles/WIDEO_PELI.dir/server.cpp.o.provides: CMakeFiles/WIDEO_PELI.dir/server.cpp.o.requires
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/server.cpp.o.provides.build
-.PHONY : CMakeFiles/WIDEO_PELI.dir/server.cpp.o.provides
-
-CMakeFiles/WIDEO_PELI.dir/server.cpp.o.provides.build: CMakeFiles/WIDEO_PELI.dir/server.cpp.o
+CMakeFiles/WIDEO_PELI.dir/tar.cpp.o.provides.build: CMakeFiles/WIDEO_PELI.dir/tar.cpp.o
 
 
 # Object files for target WIDEO_PELI
@@ -231,9 +183,7 @@ WIDEO_PELI_OBJECTS = \
 "CMakeFiles/WIDEO_PELI.dir/Grid.cpp.o" \
 "CMakeFiles/WIDEO_PELI.dir/main.cpp.o" \
 "CMakeFiles/WIDEO_PELI.dir/Map.cpp.o" \
-"CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o" \
-"CMakeFiles/WIDEO_PELI.dir/network.cpp.o" \
-"CMakeFiles/WIDEO_PELI.dir/server.cpp.o"
+"CMakeFiles/WIDEO_PELI.dir/tar.cpp.o"
 
 # External object files for target WIDEO_PELI
 WIDEO_PELI_EXTERNAL_OBJECTS =
@@ -242,16 +192,15 @@ WIDEO_PELI: CMakeFiles/WIDEO_PELI.dir/boost.cpp.o
 WIDEO_PELI: CMakeFiles/WIDEO_PELI.dir/Grid.cpp.o
 WIDEO_PELI: CMakeFiles/WIDEO_PELI.dir/main.cpp.o
 WIDEO_PELI: CMakeFiles/WIDEO_PELI.dir/Map.cpp.o
-WIDEO_PELI: CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o
-WIDEO_PELI: CMakeFiles/WIDEO_PELI.dir/network.cpp.o
-WIDEO_PELI: CMakeFiles/WIDEO_PELI.dir/server.cpp.o
+WIDEO_PELI: CMakeFiles/WIDEO_PELI.dir/tar.cpp.o
 WIDEO_PELI: CMakeFiles/WIDEO_PELI.dir/build.make
 WIDEO_PELI: /home/juuusto/SFML-2.5.1/lib/libsfml-graphics.so.2.5.1
 WIDEO_PELI: /home/juuusto/SFML-2.5.1/lib/libsfml-audio.so.2.5.1
 WIDEO_PELI: /home/juuusto/SFML-2.5.1/lib/libsfml-window.so.2.5.1
+WIDEO_PELI: /home/juuusto/SFML-2.5.1/lib/libsfml-network.so.2.5.1
 WIDEO_PELI: /home/juuusto/SFML-2.5.1/lib/libsfml-system.so.2.5.1
 WIDEO_PELI: CMakeFiles/WIDEO_PELI.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable WIDEO_PELI"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable WIDEO_PELI"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/WIDEO_PELI.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -263,9 +212,7 @@ CMakeFiles/WIDEO_PELI.dir/requires: CMakeFiles/WIDEO_PELI.dir/boost.cpp.o.requir
 CMakeFiles/WIDEO_PELI.dir/requires: CMakeFiles/WIDEO_PELI.dir/Grid.cpp.o.requires
 CMakeFiles/WIDEO_PELI.dir/requires: CMakeFiles/WIDEO_PELI.dir/main.cpp.o.requires
 CMakeFiles/WIDEO_PELI.dir/requires: CMakeFiles/WIDEO_PELI.dir/Map.cpp.o.requires
-CMakeFiles/WIDEO_PELI.dir/requires: CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o.requires
-CMakeFiles/WIDEO_PELI.dir/requires: CMakeFiles/WIDEO_PELI.dir/network.cpp.o.requires
-CMakeFiles/WIDEO_PELI.dir/requires: CMakeFiles/WIDEO_PELI.dir/server.cpp.o.requires
+CMakeFiles/WIDEO_PELI.dir/requires: CMakeFiles/WIDEO_PELI.dir/tar.cpp.o.requires
 
 .PHONY : CMakeFiles/WIDEO_PELI.dir/requires
 

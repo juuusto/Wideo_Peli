@@ -51,7 +51,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/juuusto/cplusplus/micro-machines-2020-1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/juuusto/cplusplus/micro-machines-2020-1/src
+CMAKE_BINARY_DIR = /home/juuusto/cplusplus/micro-machines-2020-1
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles /home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/juuusto/cplusplus/micro-machines-2020-1/CMakeFiles /home/juuusto/cplusplus/micro-machines-2020-1/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/juuusto/cplusplus/micro-machines-2020-1/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -123,140 +123,140 @@ WIDEO_PELI/fast:
 	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/build
 .PHONY : WIDEO_PELI/fast
 
-Grid.o: Grid.cpp.o
+src/Grid.o: src/Grid.cpp.o
 
-.PHONY : Grid.o
-
-# target to build an object file
-Grid.cpp.o:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/Grid.cpp.o
-.PHONY : Grid.cpp.o
-
-Grid.i: Grid.cpp.i
-
-.PHONY : Grid.i
-
-# target to preprocess a source file
-Grid.cpp.i:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/Grid.cpp.i
-.PHONY : Grid.cpp.i
-
-Grid.s: Grid.cpp.s
-
-.PHONY : Grid.s
-
-# target to generate assembly for a file
-Grid.cpp.s:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/Grid.cpp.s
-.PHONY : Grid.cpp.s
-
-Map.o: Map.cpp.o
-
-.PHONY : Map.o
+.PHONY : src/Grid.o
 
 # target to build an object file
-Map.cpp.o:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/Map.cpp.o
-.PHONY : Map.cpp.o
+src/Grid.cpp.o:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/Grid.cpp.o
+.PHONY : src/Grid.cpp.o
 
-Map.i: Map.cpp.i
+src/Grid.i: src/Grid.cpp.i
 
-.PHONY : Map.i
+.PHONY : src/Grid.i
 
 # target to preprocess a source file
-Map.cpp.i:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/Map.cpp.i
-.PHONY : Map.cpp.i
+src/Grid.cpp.i:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/Grid.cpp.i
+.PHONY : src/Grid.cpp.i
 
-Map.s: Map.cpp.s
+src/Grid.s: src/Grid.cpp.s
 
-.PHONY : Map.s
+.PHONY : src/Grid.s
 
 # target to generate assembly for a file
-Map.cpp.s:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/Map.cpp.s
-.PHONY : Map.cpp.s
+src/Grid.cpp.s:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/Grid.cpp.s
+.PHONY : src/Grid.cpp.s
 
-boost.o: boost.cpp.o
+src/Map.o: src/Map.cpp.o
 
-.PHONY : boost.o
+.PHONY : src/Map.o
 
 # target to build an object file
-boost.cpp.o:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/boost.cpp.o
-.PHONY : boost.cpp.o
+src/Map.cpp.o:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/Map.cpp.o
+.PHONY : src/Map.cpp.o
 
-boost.i: boost.cpp.i
+src/Map.i: src/Map.cpp.i
 
-.PHONY : boost.i
+.PHONY : src/Map.i
 
 # target to preprocess a source file
-boost.cpp.i:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/boost.cpp.i
-.PHONY : boost.cpp.i
+src/Map.cpp.i:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/Map.cpp.i
+.PHONY : src/Map.cpp.i
 
-boost.s: boost.cpp.s
+src/Map.s: src/Map.cpp.s
 
-.PHONY : boost.s
+.PHONY : src/Map.s
 
 # target to generate assembly for a file
-boost.cpp.s:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/boost.cpp.s
-.PHONY : boost.cpp.s
+src/Map.cpp.s:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/Map.cpp.s
+.PHONY : src/Map.cpp.s
 
-main.o: main.cpp.o
+src/boost.o: src/boost.cpp.o
 
-.PHONY : main.o
+.PHONY : src/boost.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/main.cpp.o
-.PHONY : main.cpp.o
+src/boost.cpp.o:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/boost.cpp.o
+.PHONY : src/boost.cpp.o
 
-main.i: main.cpp.i
+src/boost.i: src/boost.cpp.i
 
-.PHONY : main.i
+.PHONY : src/boost.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/main.cpp.i
-.PHONY : main.cpp.i
+src/boost.cpp.i:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/boost.cpp.i
+.PHONY : src/boost.cpp.i
 
-main.s: main.cpp.s
+src/boost.s: src/boost.cpp.s
 
-.PHONY : main.s
+.PHONY : src/boost.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/main.cpp.s
-.PHONY : main.cpp.s
+src/boost.cpp.s:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/boost.cpp.s
+.PHONY : src/boost.cpp.s
 
-tar.o: tar.cpp.o
+src/main.o: src/main.cpp.o
 
-.PHONY : tar.o
+.PHONY : src/main.o
 
 # target to build an object file
-tar.cpp.o:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/tar.cpp.o
-.PHONY : tar.cpp.o
+src/main.cpp.o:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
 
-tar.i: tar.cpp.i
+src/main.i: src/main.cpp.i
 
-.PHONY : tar.i
+.PHONY : src/main.i
 
 # target to preprocess a source file
-tar.cpp.i:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/tar.cpp.i
-.PHONY : tar.cpp.i
+src/main.cpp.i:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
 
-tar.s: tar.cpp.s
+src/main.s: src/main.cpp.s
 
-.PHONY : tar.s
+.PHONY : src/main.s
 
 # target to generate assembly for a file
-tar.cpp.s:
-	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/tar.cpp.s
-.PHONY : tar.cpp.s
+src/main.cpp.s:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
+
+src/tar.o: src/tar.cpp.o
+
+.PHONY : src/tar.o
+
+# target to build an object file
+src/tar.cpp.o:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/tar.cpp.o
+.PHONY : src/tar.cpp.o
+
+src/tar.i: src/tar.cpp.i
+
+.PHONY : src/tar.i
+
+# target to preprocess a source file
+src/tar.cpp.i:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/tar.cpp.i
+.PHONY : src/tar.cpp.i
+
+src/tar.s: src/tar.cpp.s
+
+.PHONY : src/tar.s
+
+# target to generate assembly for a file
+src/tar.cpp.s:
+	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/src/tar.cpp.s
+.PHONY : src/tar.cpp.s
 
 # Help Target
 help:
@@ -267,21 +267,21 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... WIDEO_PELI"
 	@echo "... edit_cache"
-	@echo "... Grid.o"
-	@echo "... Grid.i"
-	@echo "... Grid.s"
-	@echo "... Map.o"
-	@echo "... Map.i"
-	@echo "... Map.s"
-	@echo "... boost.o"
-	@echo "... boost.i"
-	@echo "... boost.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
-	@echo "... tar.o"
-	@echo "... tar.i"
-	@echo "... tar.s"
+	@echo "... src/Grid.o"
+	@echo "... src/Grid.i"
+	@echo "... src/Grid.s"
+	@echo "... src/Map.o"
+	@echo "... src/Map.i"
+	@echo "... src/Map.s"
+	@echo "... src/boost.o"
+	@echo "... src/boost.i"
+	@echo "... src/boost.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
+	@echo "... src/tar.o"
+	@echo "... src/tar.i"
+	@echo "... src/tar.s"
 .PHONY : help
 
 

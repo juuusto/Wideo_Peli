@@ -6,16 +6,15 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/juuusto/cplusplus/micro-machines-2020-1/src/Grid.cpp" "/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/WIDEO_PELI.dir/Grid.cpp.o"
   "/home/juuusto/cplusplus/micro-machines-2020-1/src/Map.cpp" "/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/WIDEO_PELI.dir/Map.cpp.o"
-  "/home/juuusto/cplusplus/micro-machines-2020-1/src/Menu.cpp" "/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o"
   "/home/juuusto/cplusplus/micro-machines-2020-1/src/boost.cpp" "/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/WIDEO_PELI.dir/boost.cpp.o"
   "/home/juuusto/cplusplus/micro-machines-2020-1/src/main.cpp" "/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/WIDEO_PELI.dir/main.cpp.o"
-  "/home/juuusto/cplusplus/micro-machines-2020-1/src/network.cpp" "/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/WIDEO_PELI.dir/network.cpp.o"
-  "/home/juuusto/cplusplus/micro-machines-2020-1/src/server.cpp" "/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/WIDEO_PELI.dir/server.cpp.o"
+  "/home/juuusto/cplusplus/micro-machines-2020-1/src/tar.cpp" "/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/WIDEO_PELI.dir/tar.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "."
   "/home/juuusto/SFML-2.5.1/include"
   )
 

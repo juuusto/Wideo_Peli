@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1",
+  "command": "/usr/bin/c++   -I/home/juuusto/cplusplus/micro-machines-2020-1/src -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/src/boost.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/boost.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/boost.cpp"
+},
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1",
+  "command": "/usr/bin/c++   -I/home/juuusto/cplusplus/micro-machines-2020-1/src -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/src/Grid.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/Grid.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/Grid.cpp"
+},
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1",
+  "command": "/usr/bin/c++   -I/home/juuusto/cplusplus/micro-machines-2020-1/src -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/src/main.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/main.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/main.cpp"
+},
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1",
+  "command": "/usr/bin/c++   -I/home/juuusto/cplusplus/micro-machines-2020-1/src -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/src/Map.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/Map.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/Map.cpp"
+},
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1",
+  "command": "/usr/bin/c++   -I/home/juuusto/cplusplus/micro-machines-2020-1/src -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/src/tar.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/tar.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/tar.cpp"
+}
+]

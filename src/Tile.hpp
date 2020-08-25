@@ -1,6 +1,7 @@
 #ifndef __GRID_H__
 #define __GRID_H__
 #include<string>
+#include <vector>
 class Tile {
 public:
     Tile(std::string tilename,std::vector<char> collisions ): tilename_(tilename),collisions_(collisions){
@@ -16,6 +17,7 @@ public:
         int xB = x-xC*8;
         return collisions_[xC +25*y]&(1<<xB) != 0;
     }
+
     std::vector<char>  getCollArr (){
         return collisions_;
     }

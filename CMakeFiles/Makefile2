@@ -57,7 +57,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/juuusto/cplusplus/micro-machines-2020-1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/juuusto/cplusplus/micro-machines-2020-1/src
+CMAKE_BINARY_DIR = /home/juuusto/cplusplus/micro-machines-2020-1
 
 #=============================================================================
 # Target rules for target CMakeFiles/WIDEO_PELI.dir
@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = /home/juuusto/cplusplus/micro-machines-2020-1/src
 CMakeFiles/WIDEO_PELI.dir/all:
 	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/depend
 	$(MAKE) -f CMakeFiles/WIDEO_PELI.dir/build.make CMakeFiles/WIDEO_PELI.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target WIDEO_PELI"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/juuusto/cplusplus/micro-machines-2020-1/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target WIDEO_PELI"
 .PHONY : CMakeFiles/WIDEO_PELI.dir/all
 
 # Include target in all.
@@ -76,9 +76,9 @@ all: CMakeFiles/WIDEO_PELI.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/WIDEO_PELI.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/juuusto/cplusplus/micro-machines-2020-1/CMakeFiles 6
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/WIDEO_PELI.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/juuusto/cplusplus/micro-machines-2020-1/CMakeFiles 0
 .PHONY : CMakeFiles/WIDEO_PELI.dir/rule
 
 # Convenience name for target.
