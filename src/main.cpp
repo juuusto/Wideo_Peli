@@ -1,5 +1,6 @@
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <math.h>
 #include "Map.cpp"
 #include "vehicle.hpp"
@@ -7,9 +8,11 @@
 #include <iostream>
 #include <stdio.h>
 #include <vector>
+#include "projectile.hpp"
 #include "network.cpp"
 #include "tar.cpp"
 #include "boost.cpp"
+
 
 
 class Game
@@ -37,6 +40,7 @@ public:
             textures.push_back(aaa);
         }
 
+        sf::Text UItext;
         sf::Text text;
         sf::Font font;
         if (!font.loadFromFile("assets/arial.ttf"))
@@ -48,6 +52,10 @@ public:
         text.setCharacterSize(24);
         text.setFillColor(sf::Color::Red);
         text.setPosition(10, 20);
+        UItext.setFont(font);
+        UItext.setCharacterSize(24);
+        UItext.setFillColor(sf::Color::Green);
+        UItext.setPosition(10, 560);
 
 
         sf::Text nameTag;
@@ -60,6 +68,7 @@ public:
         float currentSpeed = 0.f;
 
         
+        // loading textures (implement textureloader class?)
         sf::Texture car;
         if (!car.loadFromFile(player_.getCar().getSprite()))
         {
@@ -106,11 +115,26 @@ public:
         } 
 
 
+        sf::Texture projTexture;
+        if(!projTexture.loadFromFile("assets/projectile.png")){
+            return 0;
+        }
+        
+        sf::SoundBuffer shootingBuff;
+        if(!shootingBuff.loadFromFile("assets/shoot.wav")){
+            return 0;
+        }
+
+        sf::Sound shootingSound;
+        shootingSound.setBuffer(shootingBuff);
+        shootingSound.setVolume(10.f);
        
 
 
         sf::Sprite playerSprite;
         sf::Sprite netSprite;
+        sf::Sprite netprojSprite;
+        netprojSprite.setTexture(projTexture); 
         netSprite.move(windowX / 2, windowY / 2);
         netSprite.setTexture(otherCar);
         netSprite.setOrigin(otherCar.getSize().x * 0.5f, otherCar.getSize().y * 0.5f);
@@ -126,6 +150,10 @@ public:
     
 
         
+
+        //timer for shooting
+        shootingClock = sf::Clock();
+
         while (window.isOpen())
         {
 
@@ -153,6 +181,60 @@ public:
                 rot -= player_.getCar().getTurnSpeed();
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
                 rot += player_.getCar().getTurnSpeed();
+
+
+            //shooting variables
+            Projectile projectile;
+            projectile.sprite_.setTexture(projTexture); 
+            sf::Vector2f aimDirection;
+            sf::Vector2f aimDirectionNorm;
+            sf::Vector2f playerSpriteCenter;
+            
+            
+
+            playerSpriteCenter = sf::Vector2f(playerSprite.getPosition().x , playerSprite.getPosition().y);
+            aimDirection = sf::Vector2f( cos(playerSprite.getRotation() * (3.14/180)), sin(playerSprite.getRotation() * (3.14/180) ));
+		    aimDirectionNorm = aimDirection / sqrt( (aimDirection.x * aimDirection.x ) + (aimDirection.y * aimDirection.y ) );
+
+
+            //shooting
+     
+
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player_.getAmmo() > 0 && shootingClock.getElapsedTime().asSeconds() > 2 ){
+                shootingClock.restart();
+                player_.shoot();
+                shootingSound.play();
+                projectile.sprite_.setPosition(playerSpriteCenter);
+			    projectile.speed_ = aimDirectionNorm * projectile.maxSpeed_;
+			    projectiles_.push_back(Projectile(projectile));
+            }
+
+
+            //erasing when projectiles are out of map
+            for(size_t i = 0; i < projectiles_.size(); i++){
+                projectiles_[i].sprite_.move(projectiles_[i].speed_);
+                
+                if(projectiles_[i].sprite_.getPosition().x < 0 || projectiles_[i].sprite_.getPosition().x > 5000 ||
+                   projectiles_[i].sprite_.getPosition().y < 0 || projectiles_[i].sprite_.getPosition().y > 5000 )
+                   {
+                       projectiles_.erase(projectiles_.begin() + i);
+                   }
+
+            }
+
+
+
+
+            //checking for other players projectiles hitting you
+            for(size_t i = 0; i < netProjectiles_.size(); i++){
+                if(netProjectiles_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
+                    player_.hit();
+                    netProjectiles_.erase(netProjectiles_.begin() + i);
+                }
+
+            }
+
+
 
             currentSpeed -= player_.getCar().getDrag();
             if (currentSpeed < 0.f)
@@ -213,6 +295,12 @@ public:
             );
 
 
+            UItext.setString(
+                "Ammo:" + std::to_string(player_.getAmmo()) + "     CD: "+ std::to_string(shootingClock.getElapsedTime().asSeconds()) + "       HP: " + std::to_string(player_.getHp()) 
+            );
+
+        
+
             playerSprite.move(xChange, yChange);
             for(playerData pd :net_->getPlayerDataAll()){
                 if(pd.type!=net_->getConId() && playerSprite.getGlobalBounds().contains(pd.x,pd.y)){
@@ -223,9 +311,12 @@ public:
                 }
 
             }
+            
+            
             view.move(xChange, yChange);
             window.setView(view);
             text.move(xChange, yChange);
+            UItext.move(xChange,yChange);
 
 
 
@@ -247,7 +338,16 @@ public:
 
             if(net_->isConnected()){
                 net_->refreshData(playerData{(int)playerX,(int)playerY,(int)rot,net_->getConId()});
-                
+                net_->refreshAssetData(projectiles_);
+
+                for(std::pair<int,int> pro :net_->getProjectileDataAll()){
+                    //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
+
+                    netprojSprite.setPosition(pro.first,pro.second);
+                    window.draw(netprojSprite);
+                }
+
+
                 for(playerData pd :net_->getPlayerDataAll()){
                     //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
                     nameTag.setString(pd.name);
@@ -270,8 +370,12 @@ public:
             for(auto it : boosts_){
                 window.draw(it.sprite_);
             }
+            for(auto it : projectiles_){
+                window.draw(it.sprite_);
+            }
             window.draw(playerSprite);
             window.draw(text);
+            window.draw(UItext);
             window.display();
         }
         return 0;
@@ -284,7 +388,147 @@ private:
     std::vector<Tar> tarSpills_;
     std::vector<Boost> boosts_;
     sf::Clock boostClock;
+    std::vector<Projectile> projectiles_;
+    sf::Clock shootingClock;
+    std::vector<Projectile> netProjectiles_;
 };
+
+std::vector<std::string> mainMenu(sf::RenderWindow& window, int windowX = 800, int windowY = 600){
+    int menuOpt = -1;
+    int tmpOpt = 0;
+    int valueToEdit = 0;
+    int inputTextVal= 0;
+    std::vector<std::string> resvector;
+    resvector.push_back ("127.0.0.1");
+    resvector.push_back ("unknown peli ukko");
+    std::vector<std::string> inputTextvector;
+    inputTextvector.push_back ("Address");
+    inputTextvector.push_back ("Player Name");
+    std::vector<std::string> myvector;
+    myvector.push_back ("Player Name");
+    myvector.push_back ("New Game");
+    myvector.push_back ("Network Play");
+    myvector.push_back ("Quit");
+
+
+    sf::Text text;
+    sf::Font font;
+    if (!font.loadFromFile("assets/arial.ttf"))
+    {
+        return resvector;
+    }
+    sf::Texture menuTEX;
+    if (!menuTEX.loadFromFile("assets/menu.png"))
+    {
+        return resvector;
+    }
+    sf::Sprite menuS;
+    menuS.setTexture(menuTEX);
+    text.setFont(font);
+    text.setCharacterSize(24);
+    text.setFillColor(sf::Color::White);
+    //text.setPosition(10, 20);
+    std::string textInput;
+    bool textInputOn = false;
+    window.setFramerateLimit(12);
+
+    while (menuOpt!=3 && window.isOpen()){
+        bool allowReturn = true;
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            switch (event.type)
+            {
+            case sf::Event::Closed:
+                window.close();
+                break;
+            default:
+                break;
+            }
+        }
+        window.clear();
+        window.draw(menuS);
+
+
+        if(textInputOn){
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+                textInputOn = false;
+                menuOpt = -1;
+                allowReturn = false;
+            } else {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
+                    resvector[valueToEdit] = resvector[valueToEdit].substr(0, resvector[valueToEdit].size()-1);
+                } else if (event.type == sf::Event::TextEntered) {
+                    resvector[valueToEdit] +=event.text.unicode;
+                }
+            
+                //window.clear();
+                text.setPosition(10, 20);
+                text.setString(inputTextvector[inputTextVal]+":\n");
+                window.draw(text);
+                text.setPosition(10, 54);
+                text.setString(resvector[valueToEdit]);
+                window.draw(text);
+                window.display();
+                continue;  
+            }
+
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            window.close();
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            tmpOpt-=1;
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            tmpOpt+=1;
+
+
+        if (tmpOpt<0) tmpOpt=0;
+        else if (tmpOpt>=myvector.size())tmpOpt=myvector.size()-1;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && allowReturn)
+            menuOpt = tmpOpt;
+
+
+    // set conn addr
+        if(menuOpt == 0){
+            textInputOn = true;
+            valueToEdit = 1;
+            inputTextVal = 1;
+        } else if(menuOpt == 2){
+            textInputOn = true;
+            valueToEdit = 0;
+            inputTextVal = 0;
+            //menuOpt = 3;
+        } else if(menuOpt == 1){
+            //resvector[valueToEdit] = "127.0.0.1";
+            menuOpt = 3;
+        } else if(menuOpt == 3){
+            window.close();
+        } 
+
+
+        //window.clear();
+        for(int menu1 = 0; menu1<myvector.size(); menu1++){
+            text.setFillColor(sf::Color::White);
+            if (menu1 == tmpOpt){
+                text.setFillColor(sf::Color::Red);
+            }
+            text.setPosition(10, 20+menu1*24);
+            text.setString(myvector[menu1]);
+            
+            window.draw(text);
+
+        }
+        
+        window.display();
+    }
+    
+
+
+
+
+}
+
 
 int main()
 {
@@ -294,19 +538,15 @@ int main()
 
     // jokin dynaaminen menu viritelmä tähän väliin?
 
-
+    std::vector<std::string> menuOpts = mainMenu(window,windowX, windowY);
 
 
 
 
     //näiden arvojen asettamiset & funktioiden ajamiset voisi tapahtua menun kautta
-    std::string addr="";
-    std::cout<<"IP (or l for localhost or n for offline play):";
-    std::cin >> addr;
-    std::string name="";
-    std::cout<<"Player Name:";
-    std::cin >> name;
-
+    std::string addr=menuOpts[0];
+    std::string name=menuOpts[1];
+    std::cout << addr << "  " << name << std::endl;
     Map kartta("map2.map");
 
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
@@ -314,7 +554,7 @@ int main()
     Player pelaaja(name, "", ajoneuvo);
 
 
-    if(addr=="l") addr="127.0.0.1";
+
     Network aa(addr);
     if(addr!="n") aa.connect(pelaaja);
     Network *verkko = &aa;
