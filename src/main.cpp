@@ -88,11 +88,17 @@ public:
         if(!shootingBuff.loadFromFile("assets/shoot.wav")){
             return 0;
         }
-
         sf::Sound shootingSound;
         shootingSound.setBuffer(shootingBuff);
         shootingSound.setVolume(10.f);
        
+        
+        sf::Music mapMusic;
+        if(!mapMusic.openFromFile("assets/" + map_.getMapMusicFile())) {
+            return 0;
+        }
+        mapMusic.play();
+
 
 
         sf::Sprite playerSprite;
@@ -356,6 +362,8 @@ std::vector<std::string> mainMenu(sf::RenderWindow& window, int windowX = 800, i
     {
         return resvector;
     }
+
+
     sf::Sprite menuS;
     menuS.setTexture(menuTEX);
     text.setFont(font);
@@ -481,7 +489,7 @@ int main()
     std::string addr=menuOpts[0];
     std::string name=menuOpts[1];
     std::cout << addr << "  " << name << std::endl;
-    Map kartta("map2.map");
+    Map kartta("map3.map");
 
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
 
