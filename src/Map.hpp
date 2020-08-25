@@ -39,7 +39,15 @@ public:
         std::ifstream mapf ("./assets/"+fname);
         
         if(mapf.is_open()) {
-            
+
+            // read music for the map. 8 bytes.
+            for(unsigned int i = 0; i < 8; i++) {
+                mapf.read(&byte, 1);
+                musicFname += byte;
+                byte >> 8;
+            }
+            musicFname += ".wav";
+
             //Read to width(x). Size is 2 bytes.
             mapf.read(&byte, 1);
             val = byte << 8;
@@ -98,9 +106,14 @@ public:
     Tile getTile(int id);
 
     Tile getTile(int x, int y);
+
     int getTileId(int x, int y);
+
     std::vector<Tile> getTiles();
+
     void setTile(int x, int y,int value);
+
+    std::string getMapMusicFile();    
 private:
     std::vector<Tile> tileArr_;
     int rectSize_;
@@ -108,4 +121,5 @@ private:
     int height;
     std::vector<int> mapArray_;
     Grid grid;
+    std::string musicFname;
 };
