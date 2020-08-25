@@ -1,0 +1,37 @@
+[
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1/src",
+  "command": "/usr/bin/c++   -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/boost.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/boost.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/boost.cpp"
+},
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1/src",
+  "command": "/usr/bin/c++   -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/Grid.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/Grid.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/Grid.cpp"
+},
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1/src",
+  "command": "/usr/bin/c++   -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/main.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/main.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/main.cpp"
+},
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1/src",
+  "command": "/usr/bin/c++   -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/Map.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/Map.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/Map.cpp"
+},
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1/src",
+  "command": "/usr/bin/c++   -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/Menu.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/Menu.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/Menu.cpp"
+},
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1/src",
+  "command": "/usr/bin/c++   -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/network.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/network.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/network.cpp"
+},
+{
+  "directory": "/home/juuusto/cplusplus/micro-machines-2020-1/src",
+  "command": "/usr/bin/c++   -isystem /home/juuusto/SFML-2.5.1/include    -o CMakeFiles/WIDEO_PELI.dir/server.cpp.o -c /home/juuusto/cplusplus/micro-machines-2020-1/src/server.cpp",
+  "file": "/home/juuusto/cplusplus/micro-machines-2020-1/src/server.cpp"
+}
+]

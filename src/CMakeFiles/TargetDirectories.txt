@@ -1,0 +1,3 @@
+/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/rebuild_cache.dir
+/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/WIDEO_PELI.dir
+/home/juuusto/cplusplus/micro-machines-2020-1/src/CMakeFiles/edit_cache.dir
