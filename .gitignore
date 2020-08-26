@@ -14,4 +14,5 @@ game.exe
 /src/assets/srvMapEdit.exe
 a.out
 /src/tests
+/src/tests.exe
 /src/main-test.o
