@@ -47,6 +47,9 @@ public:
         sf::Text UItext;
         sf::Text text;
         sf::Font font;
+        sf::Text wintext; 
+
+
         if (!font.loadFromFile("assets/arial.ttf"))
         {
             return 0;
@@ -60,6 +63,11 @@ public:
         UItext.setCharacterSize(24);
         UItext.setFillColor(sf::Color::Blue);
         UItext.setPosition(10, 560);
+        wintext.setFont(font);
+        wintext.setCharacterSize(44);
+        wintext.setFillColor(sf::Color::Cyan);
+        wintext.setPosition(60, 260);
+
 
         sf::Text nameTag;
         nameTag.setFont(font);
@@ -198,6 +206,8 @@ public:
         window.setView(view);
         text.move(startX1, startY1);
         UItext.move(startX1, startY1);
+        wintext.move(startX1, startY1);
+
 
         //timer for shooting
         shootingClock = sf::Clock();
@@ -257,11 +267,6 @@ public:
             }
 
         
-
-
-
-
-
 
             //shooting variables
             Projectile projectile;
@@ -366,6 +371,8 @@ public:
             UItext.setString(
                 "Ammo:" + std::to_string(player_.getAmmo()) + "     CD: " + std::to_string(shootingClock.getElapsedTime().asSeconds()) + "       HP: " + std::to_string(player_.getHp()) + "                Laps: " + std::to_string(player_.getLaps()));
 
+            wintext.setString("You are the winner! Congratulations!");
+
             playerSprite.move(xChange, yChange);
             for (playerData pd : net_->getPlayerDataAll())
             {
@@ -382,6 +389,7 @@ public:
             window.setView(view);
             text.move(xChange, yChange);
             UItext.move(xChange, yChange);
+            wintext.move(xChange, yChange);
 
             window.clear();
 
@@ -459,6 +467,8 @@ public:
             {
                 window.draw(it.sprite_);
             }
+        
+
             window.draw(checkpoint1);
             window.draw(checkpoint2);
             window.draw(goalBarrier);
@@ -466,6 +476,14 @@ public:
             window.draw(playerSprite);
             window.draw(text);
             window.draw(UItext);
+
+            //check for winner (5 laps)
+            if(player_.getLaps() == 2){
+                
+                window.draw(wintext);
+            }
+
+
             window.display();
         }
         return 0;
