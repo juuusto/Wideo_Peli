@@ -13,3 +13,4 @@ game.exe
 a.out
 /src/tests
 /src/tests.exe
+/src/main-test.o
