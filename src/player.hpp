@@ -1,7 +1,7 @@
 class Player
 {
 public:
-    Player(std::string name, std::string image, Vehicle car, int x = 0, int y = 0, int ammo = 20, int hp = 6, int laps = 0) : x_(0), y_(0), name_(name), image_(image), car_(car), ammo_(ammo), hp_(hp), laps_(laps),checkpoint1_(false),checkpoint2_(false){};
+    Player(std::string name, std::string image, Vehicle car, int x = 0, int y = 0, int ammo = 20, int hp = 6, int laps = 1) : x_(0), y_(0), name_(name), image_(image), car_(car), ammo_(ammo), hp_(hp), laps_(laps),checkpoint1_(false),checkpoint2_(false){};
     ~Player()
     {
     }
