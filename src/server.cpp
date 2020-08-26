@@ -3,6 +3,7 @@
 #include <ctime>
 #include <math.h>
 #include <chrono>
+#include <fstream>
 
 struct aiplayerServerData
 {
@@ -54,13 +55,75 @@ float calcAIrotDiff(int ox, int oy, int nx, int ny)
     }
 }
 
-int main()
+bool loadServerMap(std::string &SRV_MAP, std::vector<std::vector<std::pair<int, int>>> &aiDat, std::string mapname)
 {
+    std::ifstream mapf("./assets/"+mapname);
 
-    std::vector<std::pair<int, int>> aiPath{std::pair<int, int>(500, 300), std::pair<int, int>(800, 400), std::pair<int, int>(1900, 200)};
-    std::vector<std::pair<int, int>> aiPath1{std::pair<int, int>(600, 200), std::pair<int, int>(500, 400), std::pair<int, int>(2900, 200)};
+    if (mapf.is_open())
+    {
+        std::cout << "Start map load\n";
+        SRV_MAP = "";
+        char tmpchar = 0xFF;
+        while (true)
+        {
+            mapf.read(&tmpchar, 1);
+            if (tmpchar == 0)
+                break;
+            SRV_MAP += tmpchar;
+        }
+        std::cout << "Server mapname loaded " << SRV_MAP << "\n";
+        bool readMore = true;
 
-    std::string SERVER_MAP = "map3.map";
+        while (readMore)
+        {
+            std::vector<std::pair<int, int>> tmpData{};
+            while (true)
+            {
+                int x = 0;
+                int y = 0;
+                mapf.read((char *)&x, 4);
+                mapf.read((char *)&y, 4);
+                std::cout << "X:" << x << "Y:" << y << "\n";
+
+                if (x == 0 && y == 0)
+                    break;
+                else if (x == 0xFFFFFFFF && y == 0xFFFFFFFF)
+                {
+                    readMore = false;
+                    break;
+                }
+                tmpData.push_back(std::pair<int, int>(x, y));
+            }
+            std::cout << " Ai player loaded\n";
+            aiDat.push_back(tmpData);
+        }
+        std::cout << "All Ai players loaded\n";
+        mapf.close();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc<2){
+        std::cout << "Please give map file name\n Usage:"<<argv[0]<< " <map filename>\n";
+        return 0;
+    }
+    std::string srv_headerfile_name = argv[1];
+    std::vector<std::vector<std::pair<int, int>>> aiData;
+    //aiData.push_back( std::vector<std::pair<int, int>> {std::pair<int, int>(500, 300), std::pair<int, int>(800, 400), std::pair<int, int>(1900, 200)});
+    //aiData.push_back( std::vector<std::pair<int, int>> {std::pair<int, int>(600, 200), std::pair<int, int>(500, 400), std::pair<int, int>(2900, 200)});
+
+    std::string SERVER_MAP;
+
+    if(!loadServerMap(SERVER_MAP, aiData,srv_headerfile_name)){
+        std::cout << "Could not start server! Map not found";
+        return 0;
+    }
+    std::cout << "Server map loaded\n";
+
     unsigned short inPort = 54010;
     unsigned short outPort = 54000;
     sf::UdpSocket socket;
@@ -73,12 +136,12 @@ int main()
     std::chrono::steady_clock::time_point betterTime = std::chrono::steady_clock::now();
 
     // for AI
-    float aiX = aiPath[0].first;
-    float aiY = aiPath[0].second;
-    aiPlayers.push_back(aiplayerServerData{aiX, aiY, 0, 0, 15.f, currentTime, aiPath, 0, "ai"});
-    aiX = aiPath1[0].first;
-    aiY = aiPath1[0].second;
-    aiPlayers.push_back(aiplayerServerData{aiX, aiY, 0, 1, 15.f, currentTime, aiPath1, 0, "ai1"});
+    for (int aiPath = 0; aiPath < aiData.size(); aiPath++)
+    {
+        float aiX = aiData[aiPath][0].first;
+        float aiY = aiData[aiPath][0].second;
+        aiPlayers.push_back(aiplayerServerData{aiX, aiY, 0, aiPath, 15.f, currentTime, aiData[aiPath], 0, "ai"});
+    }
 
     std::chrono::steady_clock::time_point aiUptdTime = betterTime;
     while (true)
