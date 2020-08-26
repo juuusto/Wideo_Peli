@@ -58,7 +58,7 @@ public:
         text.setPosition(10, 20);
         UItext.setFont(font);
         UItext.setCharacterSize(24);
-        UItext.setFillColor(sf::Color::Green);
+        UItext.setFillColor(sf::Color::Blue);
         UItext.setPosition(10, 560);
 
         sf::Text nameTag;
@@ -120,11 +120,21 @@ public:
             return 0;
         }
 
+
+        sf::Texture goalLineBigText;
+         if (!goalLineBigText.loadFromFile("assets/goalLine_400.png"))
+        {
+            return 0;
+        }
+
+
+
         sf::SoundBuffer shootingBuff;
         if (!shootingBuff.loadFromFile("assets/shoot.wav"))
         {
             return 0;
         }
+        
         sf::Sound shootingSound;
         shootingSound.setBuffer(shootingBuff);
         shootingSound.setVolume(10.f);
@@ -141,6 +151,23 @@ public:
         sf::Sprite playerSprite;
         sf::Sprite netSprite;
         sf::Sprite netprojSprite;
+        sf::Sprite goalLineSprite;
+
+        goalLineSprite.setTexture(goalLineBigText);
+        
+        sf::RectangleShape goalBarrier(sf::Vector2f(400, 5));
+        sf::RectangleShape goalLineOnePixel(sf::Vector2f(400, 1));
+        sf::RectangleShape checkpoint1(sf::Vector2f(400, 7));
+        sf::RectangleShape checkpoint2(sf::Vector2f(400, 7));
+        checkpoint1.setFillColor(sf::Color::Cyan);
+        checkpoint2.setFillColor(sf::Color::Cyan);
+
+        goalLineOnePixel.rotate(270);
+        goalBarrier.setFillColor(sf::Color::Yellow);
+        goalBarrier.rotate(270);
+        
+
+
         netprojSprite.setTexture(projTexture);
         netSprite.move(windowX / 2, windowY / 2);
         netSprite.setTexture(otherCar);
@@ -156,8 +183,16 @@ public:
 
         // move player to starting location
 
-        int startX1 = startX - 425;
-        int startY1 = startY - 312;
+        int startX1 = startX - 600;
+        int startY1 = startY - 100;
+
+        goalLineSprite.setPosition(startX,startY);
+        goalBarrier.setPosition(startX + 53,startY + 400);
+        goalLineOnePixel.setPosition(startX,startY + 400);
+        checkpoint1.setPosition(2600,1800);
+        checkpoint2.setPosition(200,2000);
+
+
         playerSprite.move(startX1, startY1);
         view.move(startX1, startY1);
         window.setView(view);
@@ -202,6 +237,31 @@ public:
                 rot -= player_.getCar().getTurnSpeed();
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
                 rot += player_.getCar().getTurnSpeed();
+
+
+
+            //check if player has gone through checkpoints
+            if(checkpoint1.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
+                player_.trueCheckpoint1();
+            }
+            if(checkpoint2.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
+                player_.trueCheckpoint2();
+            }
+
+
+            // check if player gets a lap done
+            if(goalLineSprite.getGlobalBounds().intersects(playerSprite.getGlobalBounds()) && (rot < 90  || rot > 270) && player_.getCheckpoint1() && player_.getCheckpoint2()){
+                player_.incrementLap();
+                player_.falseCheckpoint1();
+                player_.falseCheckpoint2();
+            }
+
+        
+
+
+
+
+
 
             //shooting variables
             Projectile projectile;
@@ -259,7 +319,7 @@ public:
                 currentSpeedY = 0.f;
             }
 
-            else if (currentSpeed > player_.getCar().getMaxSpeed() && boostClock.getElapsedTime().asMilliseconds() > 700)
+            else if (currentSpeed > player_.getCar().getMaxSpeed() && boostClock.getElapsedTime().asMilliseconds() > 500)
             {
                 currentSpeed = player_.getCar().getMaxSpeed();
                 currentSpeedX = currentSpeed * cos((rot / 180.f) * 3.14f);
@@ -296,12 +356,15 @@ public:
                 yChange *= -3.f;
             }
 
+
+            
+
             text.setString(
                 "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX, blockY)) + "   " + std::to_string(boostClock.getElapsedTime().asSeconds()) +
                 "\nW:" + std::to_string(view.getSize().x) + " H:" + std::to_string(view.getSize().y) + " OffsetXinTile:" + std::to_string(offsetInTileX) + " OffsetYinTile:" + std::to_string(offsetInTileY));
 
             UItext.setString(
-                "Ammo:" + std::to_string(player_.getAmmo()) + "     CD: " + std::to_string(shootingClock.getElapsedTime().asSeconds()) + "       HP: " + std::to_string(player_.getHp()));
+                "Ammo:" + std::to_string(player_.getAmmo()) + "     CD: " + std::to_string(shootingClock.getElapsedTime().asSeconds()) + "       HP: " + std::to_string(player_.getHp()) + "                Laps: " + std::to_string(player_.getLaps()));
 
             playerSprite.move(xChange, yChange);
             for (playerData pd : net_->getPlayerDataAll())
@@ -388,14 +451,18 @@ public:
                 if (boostsprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds()))
                 {
                     boostClock.restart();
-                    currentSpeedX = 14 * cos((rot / 180.f) * 3.14f);
-                    currentSpeedY = 14 * sin((rot / 180.f) * 3.14f);
+                    currentSpeedX = 11 * cos((rot / 180.f) * 3.14f);
+                    currentSpeedY = 11 * sin((rot / 180.f) * 3.14f);
                 }
             }
             for (auto it : projectiles_)
             {
                 window.draw(it.sprite_);
             }
+            window.draw(checkpoint1);
+            window.draw(checkpoint2);
+            window.draw(goalBarrier);
+            window.draw(goalLineSprite);
             window.draw(playerSprite);
             window.draw(text);
             window.draw(UItext);
@@ -589,7 +656,7 @@ int main()
 
     Game peli(kartta, pelaaja, verkko);
 
-    int res = peli.run(window, windowX, windowY, 425, 312);
+    int res = peli.run(window, windowX, windowY, 1200, 200);
 
     return res;
 }
