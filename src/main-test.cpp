@@ -13,7 +13,7 @@
 #include "projectile.hpp"
 #include "network.cpp"
 
-TEST_CASE("Test that get map,tile and grid works normally.","[map]") {
+TEST_CASE("Test that get tile works. Test that get map,tile and grid works normally.","[map]") {
     Map map("map3.map");
     REQUIRE(map.getMapHeight() != 0);
     CHECK(map.getMapMusicFile() != "");
