@@ -24,7 +24,6 @@ public:
     {
         return drag_;
     }
-    
 
 private:
     std::string sprite_;

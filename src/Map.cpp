@@ -1,36 +1,43 @@
 #include "Map.hpp"
 
-int Map::getMapHeight() {return height;}
+int Map::getMapHeight() { return height; }
 
-int Map::getMapWidth() {return width;}
+int Map::getMapWidth() { return width; }
 
-void Map::constructMap() {
-    std::pair<int,int> size = grid.getSize();
-    for(int x = 0; x < size.first; x++) {
-        for (int y = 0; y < size.second; y++) {
-            grid.setTileAtCoordinate(x,y, mapArray_[y*size.first + x]);
+void Map::constructMap()
+{
+    std::pair<int, int> size = grid.getSize();
+    for (int x = 0; x < size.first; x++)
+    {
+        for (int y = 0; y < size.second; y++)
+        {
+            grid.setTileAtCoordinate(x, y, mapArray_[y * size.first + x]);
         }
     }
 }
 
-int Map::getBlockSize(){
+int Map::getBlockSize()
+{
     return rectSize_;
 }
 
-Tile Map::getTile(int id) { return tileArr_[id];}
+Tile Map::getTile(int id) { return tileArr_[id]; }
 
-Tile Map::getTile(int x, int y) { return tileArr_[grid.getTileAtCoordinate(x,y)];}
+Tile Map::getTile(int x, int y) { return tileArr_[grid.getTileAtCoordinate(x, y)]; }
 
-std::string Map::getMapMusicFile() { return musicFname;}
+std::string Map::getMapMusicFile() { return musicFname; }
 
-int Map::getTileId(int x, int y){
-    return grid.getTileAtCoordinate(x,y);
+int Map::getTileId(int x, int y)
+{
+    return grid.getTileAtCoordinate(x, y);
 }
 
-void Map::setTile(int x, int y,int value){
-    grid.setTileAtCoordinate(x, y,value);
+void Map::setTile(int x, int y, int value)
+{
+    grid.setTileAtCoordinate(x, y, value);
 }
 
-std::vector<Tile> Map::getTiles(){
+std::vector<Tile> Map::getTiles()
+{
     return tileArr_;
 }

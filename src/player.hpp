@@ -1,9 +1,9 @@
 class Player
 {
 public:
-    Player(std::string name, std::string image, Vehicle car, int x = 0, int y = 0, int ammo = 20, int hp = 6 ) : x_(0), y_(0), name_(name), image_(image), car_(car), ammo_(ammo), hp_(hp){};
-    ~Player(){
-        
+    Player(std::string name, std::string image, Vehicle car, int x = 0, int y = 0, int ammo = 20, int hp = 6) : x_(0), y_(0), name_(name), image_(image), car_(car), ammo_(ammo), hp_(hp){};
+    ~Player()
+    {
     }
     std::pair<int, int> getLocation()
     {
@@ -25,14 +25,17 @@ public:
     {
         return ammo_;
     }
-    int getHp(){
+    int getHp()
+    {
         return hp_;
     }
 
-    void shoot(){
+    void shoot()
+    {
         ammo_--;
     }
-    void hit(){
+    void hit()
+    {
         hp_--;
     }
 

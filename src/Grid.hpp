@@ -1,24 +1,25 @@
 #include <algorithm>
 #include <vector>
 
-class Grid {
+class Grid
+{
 public:
     Grid();
     Grid(int width, int height) : width_(width), height_(height) {}
-    ~Grid(){
+    ~Grid()
+    {
         map.clear();
     };
 
-
-    std::pair<int,int> getSize();
+    std::pair<int, int> getSize();
 
     int getTileAtCoordinate(int x, int y);
 
-    std::vector<int>& getGrid();
+    std::vector<int> &getGrid();
 
     void setGrid();
 
-    void setTileAtCoordinate(int x, int y,int value); 
+    void setTileAtCoordinate(int x, int y, int value);
 
 private:
     int width_;
