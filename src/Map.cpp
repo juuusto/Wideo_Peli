@@ -21,6 +21,8 @@ Tile Map::getTile(int id) { return tileArr_[id];}
 
 Tile Map::getTile(int x, int y) { return tileArr_[grid.getTileAtCoordinate(x,y)];}
 
+std::string Map::getMapMusicFile() { return musicFname;}
+
 int Map::getTileId(int x, int y){
     return grid.getTileAtCoordinate(x,y);
 }
