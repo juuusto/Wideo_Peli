@@ -1,11 +1,16 @@
+INSTRUCTIONS FOR THE INCLUDED MAP TOOLS:
+
+---------------------------------------------------------------------------------------------
 buildtools.bat
 - script used to build all maptools
 
+---------------------------------------------------------------------------------------------
 
 mapEdit 
 - use this tool to create map files.
 
 command reference:
+list				- show current data
 music <8 character filename> 	- set music file for map
 setw <width> 			- set map width
 seth <height> 			- set map height
@@ -17,7 +22,7 @@ load <filename>			- load map file
 new				- clear all program map variables
 clearmap			- clear map tile contents
 
-
+---------------------------------------------------------------------------------------------
 tileEdit:
 - use this tool to create tile collisions
 
@@ -29,3 +34,23 @@ S 		- save collisions to tile_tmp.dat (rename to correct tile data name by hand)
 L 		- load existing collision from tile<tilenumber>.dat
 ARROW_UP 	- increase brush size
 ARROW_DOWN 	- decrease brush size
+
+---------------------------------------------------------------------------------------------
+srvMapEdit:
+-use this tool to create server side map files
+
+command reference:
+list				- show current data
+addai				- add new ai player to map
+map <map_filename>		- define mapfile to be used by client
+useai <ai_number>		- select ai player for editing
+removeai<ai_number>		- remove wanted ai player
+addc <x> <y>			- add new ai coordinate at end of list
+insertc	<coord_id> <x> <y>	- insert new ai coordinate at index
+removec	<coord_id>		- remove selected coordinates from list
+removecl			- remove last item in ai coordinate list
+save <filename>			- save server map data to file
+load <filename>			- load server map data from file
+new				- clear all program map variables
+
+---------------------------------------------------------------------------------------------
