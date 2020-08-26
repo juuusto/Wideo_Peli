@@ -107,6 +107,8 @@ public:
 
     int getMapHeight();
 
+    Grid getGrid();
+    
     int getMapWidth();
 
     void constructMap();
