@@ -35,9 +35,10 @@ bool Network::connect(Player player)
     }
     std::string s(data);
     std::vector<std::string> tmpData = this->parseData(s);
-    if (tmpData.size() ==2 && tmpData[0] == "OK")
+    if (tmpData.size() ==3 && tmpData[0] == "OK")
     {
         conId_ = std::stoi(tmpData[1]);
+        srvMap_ = tmpData[2];
         connected_ = true;
         
     }
@@ -155,4 +156,7 @@ std::vector<std::pair<int,int>> Network::getProjectileDataAll()
 int Network::getPlayerCount()
 {
     return data_.size();
+}
+std::string Network::getServerMap(){
+    return srvMap_;
 }

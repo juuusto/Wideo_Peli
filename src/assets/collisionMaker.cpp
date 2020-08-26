@@ -8,6 +8,7 @@
 
 int main()
 {
+    int brushSize = 1;
     int windowX = 200;
     int windowY = 200;
 
@@ -75,30 +76,37 @@ int main()
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
+            for(int i = 0; i<brushSize; i++){
+                for(int j = 0; j<brushSize; j++){
+                    sf::Vector2i localPosition = sf::Mouse::getPosition(window);
+                    sf::Vector2u wsize = window.getSize();
+                    int xcor = 200 * ((1.0f * localPosition.x+i) / wsize.x);
+                    int ycor = 200 * ((1.0f * localPosition.y+j) / wsize.y);
+                    if (xcor >= 0 && xcor < 200 && ycor >= 0 && ycor < 200)
+                    {
+                        pixels[4 * 200 * ycor + 4 * xcor + 3] = 0xFF;
 
-            sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-            sf::Vector2u wsize = window.getSize();
-            int xcor = 200 * ((1.0f * localPosition.x) / wsize.x);
-            int ycor = 200 * ((1.0f * localPosition.y) / wsize.y);
-            if (xcor >= 0 && xcor < 200 && ycor >= 0 && ycor < 200)
-            {
-                pixels[4 * 200 * ycor + 4 * xcor + 3] = 0xFF;
-
-                arr[ycor][xcor / 8] |= (1 << (xcor % 8));
+                        arr[ycor][xcor / 8] |= (1 << (xcor % 8));
+                    }
+                }
             }
+
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
         {
+            for(int i = 0; i<brushSize; i++){
+                for(int j = 0; j<brushSize; j++){
+                    sf::Vector2i localPosition = sf::Mouse::getPosition(window);
+                    sf::Vector2u wsize = window.getSize();
+                    int xcor = 200 * ((1.0f * localPosition.x+i) / wsize.x);
+                    int ycor = 200 * ((1.0f * localPosition.y+j) / wsize.y);
+                    if (xcor >= 0 && xcor < 200 && ycor >= 0 && ycor < 200)
+                    {
+                        pixels[4 * 200 * ycor + 4 * xcor + 3] = 0x00;
 
-            sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-            sf::Vector2u wsize = window.getSize();
-            int xcor = 200 * ((1.0f * localPosition.x) / wsize.x);
-            int ycor = 200 * ((1.0f * localPosition.y) / wsize.y);
-            if (xcor >= 0 && xcor < 200 && ycor >= 0 && ycor < 200)
-            {
-                pixels[4 * 200 * ycor + 4 * xcor + 3] = 0x00;
-
-                arr[ycor][xcor / 8] &= (0xFE << (xcor % 8));
+                        arr[ycor][xcor / 8] &= (0xFE << (xcor % 8));
+                    }
+                }
             }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
@@ -147,6 +155,16 @@ int main()
 
 
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        {
+            if (brushSize<200)brushSize+=1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        {
+            if (brushSize>1)brushSize-=1;
+        }
+
+        
         window.clear(sf::Color::Black);
         tex1.update(pixels);
         cols.setTexture(tex1);

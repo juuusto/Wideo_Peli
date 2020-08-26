@@ -22,7 +22,7 @@ struct projectileData{
 
 int main()
 {
-
+    std::string SERVER_MAP = "map3.map";
     unsigned short inPort = 54010;
     unsigned short outPort = 54000;
     sf::UdpSocket socket;
@@ -77,7 +77,7 @@ int main()
             if (pCount < 15){
                 projData.push_back(std::vector<projectileData>());
                 players.push_back(playerServerData{100,100,0,(int)players.size(),currentTime,tmp_arr[1]});
-                res = "OK;"+std::to_string(players.size()-1)+";";
+                res = "OK;"+std::to_string(players.size()-1)+";"+SERVER_MAP+";";
             } else {
                 res = "ERROR;TOO MANY PLAYERS;";
             }

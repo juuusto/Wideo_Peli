@@ -33,6 +33,7 @@ class Network {
     std::vector<playerData> getPlayerDataAll();
     std::vector<std::pair<int,int>> getProjectileDataAll();
     int getPlayerCount();
+    std::string getServerMap();
     private:
         std::string serveraddr_;
         unsigned short inPort_;
@@ -42,4 +43,5 @@ class Network {
         std::vector<playerData> data_;
         std::vector<std::pair<int,int>> projdata_;
         int conId_;
+        std::string srvMap_;
 };
