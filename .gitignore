@@ -10,6 +10,8 @@ game.exe
 /src/assets/tileEdit.exe
 /src/assets/mapMaker.o
 /src/assets/mapEdit.exe
+/src/assets/srvMapMaker.o
+/src/assets/srvMapEdit.exe
 a.out
 /src/tests
 /src/tests.exe
