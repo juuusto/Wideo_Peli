@@ -71,7 +71,6 @@ bool loadServerMap(std::string &SRV_MAP, std::vector<std::vector<std::pair<int, 
                 break;
             SRV_MAP += tmpchar;
         }
-
         std::cout << "Server mapname loaded " << SRV_MAP << "\n";
         bool readMore = true;
 
@@ -94,7 +93,6 @@ bool loadServerMap(std::string &SRV_MAP, std::vector<std::vector<std::pair<int, 
                     break;
                 }
                 tmpData.push_back(std::pair<int, int>(x, y));
-                SRV_MAP += tmpchar;
             }
             std::cout << " Ai player loaded\n";
             aiDat.push_back(tmpData);
@@ -118,13 +116,12 @@ int main(int argc, char *argv[])
     //aiData.push_back( std::vector<std::pair<int, int>> {std::pair<int, int>(500, 300), std::pair<int, int>(800, 400), std::pair<int, int>(1900, 200)});
     //aiData.push_back( std::vector<std::pair<int, int>> {std::pair<int, int>(600, 200), std::pair<int, int>(500, 400), std::pair<int, int>(2900, 200)});
 
-    std::string SERVER_MAP; // = "map3.map";
+    std::string SERVER_MAP;
 
     if(!loadServerMap(SERVER_MAP, aiData,srv_headerfile_name)){
         std::cout << "Could not start server! Map not found";
         return 0;
     }
-    //SERVER_MAP = "map3.map";
     std::cout << "Server map loaded\n";
 
     unsigned short inPort = 54010;
@@ -143,7 +140,7 @@ int main(int argc, char *argv[])
     {
         float aiX = aiData[aiPath][0].first;
         float aiY = aiData[aiPath][0].second;
-        aiPlayers.push_back(aiplayerServerData{aiX, aiY, 0, 0, 15.f, currentTime, aiData[aiPath], 0, "ai"});
+        aiPlayers.push_back(aiplayerServerData{aiX, aiY, 0, aiPath, 15.f, currentTime, aiData[aiPath], 0, "ai"});
     }
 
     std::chrono::steady_clock::time_point aiUptdTime = betterTime;
