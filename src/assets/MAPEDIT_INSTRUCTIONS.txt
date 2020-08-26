@@ -1,0 +1,18 @@
+mapEdit 
+- use this tool to create map files.
+
+command reference:
+music <8 character filename> 	- set music file for map
+setw <width> 			- set map width
+seth <height> 			- set map height
+setlinks <amount>		- set amount of different tiletypes used in map
+link <tile_index> <tilenumber>	- link tile type to tile array index
+tile <x> <y> <tile_index>	- set tile in map to match the tile at given tile array index
+save <filename>			- save map file
+load <filename>			- load map file
+new				- clear all program map variables
+clearmap			- clear map tile contents
+
+
+
+

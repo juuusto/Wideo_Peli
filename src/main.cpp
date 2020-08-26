@@ -25,7 +25,7 @@ public:
     ~Game(){
 
     } 
-    int run(sf::RenderWindow& window, int windowX = 800, int windowY = 600)
+    int run(sf::RenderWindow& window, int windowX = 800, int windowY = 600,int startX = 425,int startY = 312)
     {
         
         int selectedType =0;         
@@ -66,7 +66,8 @@ public:
         window.setView(view);
 
         float currentSpeed = 0.f;
-
+float currentSpeedX = 0.f;
+float currentSpeedY = 0.f;
         
         // loading textures (implement textureloader class?)
         sf::Texture car;
@@ -82,11 +83,11 @@ public:
         }
 
 
-       
+
         Tar spill;
 
-        for(int i = 0 ; i < 17 ; i++){
-            for(int j = 0 ; j < 17 ; j++){
+        for(int i = 0 ; i < map_.getMapWidth() ; i++){
+            for(int j = 0 ; j < map_.getMapHeight() ; j++){
                 int rand0 = rand() % 12;
                 if(map_.getTile(i,j).getTileName() == "assets/tile2.png" && rand0 < 3){
                     int rand1 = rand() % 160 + 25;
@@ -101,8 +102,8 @@ public:
 
         Boost boost;
 
-        for(int i = 0 ; i < 17 ; i++){
-            for(int j = 0 ; j < 17 ; j++){
+        for(int i = 0 ; i < map_.getMapWidth() ; i++){
+            for(int j = 0 ; j < map_.getMapHeight() ; j++){
                 int rand3 = rand() % 15;
                 if(map_.getTile(i,j).getTileName() == "assets/tile2.png" && rand3 < 3){
                     int rand4 = rand() % 160 + 25;
@@ -133,6 +134,8 @@ public:
         if(!mapMusic.openFromFile("assets/" + map_.getMapMusicFile())) {
             return 0;
         }
+        mapMusic.setVolume(10.f);
+        mapMusic.setLoop(true);
         mapMusic.play();
 
 
@@ -155,7 +158,19 @@ public:
         window.setFramerateLimit(60);
     
 
+        // move player to starting location
         
+        int startX1 = startX-425;
+        int startY1 = startY-312;
+        playerSprite.move(startX1, startY1);
+        view.move(startX1, startY1);
+        window.setView(view);
+        text.move(startX1, startY1);
+        UItext.move(startX1,startY1);
+
+
+
+
 
         //timer for shooting
         shootingClock = sf::Clock();
@@ -179,10 +194,16 @@ public:
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                 window.close();
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+                currentSpeedX += player_.getCar().getAcceleration() * cos((rot / 180.f) * 3.14f);
+                currentSpeedY += player_.getCar().getAcceleration() * sin((rot / 180.f) * 3.14f);
                 currentSpeed += player_.getCar().getAcceleration();
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+                currentSpeedX -= player_.getCar().getAcceleration() * cos((rot / 180.f) * 3.14f);
+                currentSpeedY -= player_.getCar().getAcceleration() * sin((rot / 180.f) * 3.14f);
                 currentSpeed -= player_.getCar().getAcceleration();
+            }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
                 rot -= player_.getCar().getTurnSpeed();
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
@@ -220,8 +241,8 @@ public:
             for(size_t i = 0; i < projectiles_.size(); i++){
                 projectiles_[i].sprite_.move(projectiles_[i].speed_);
                 
-                if(projectiles_[i].sprite_.getPosition().x < 0 || projectiles_[i].sprite_.getPosition().x > 5000 ||
-                   projectiles_[i].sprite_.getPosition().y < 0 || projectiles_[i].sprite_.getPosition().y > 5000 )
+                if(projectiles_[i].sprite_.getPosition().x < 0 || projectiles_[i].sprite_.getPosition().x > map_.getMapWidth()*map_.getBlockSize() ||
+                   projectiles_[i].sprite_.getPosition().y < 0 || projectiles_[i].sprite_.getPosition().y > map_.getMapHeight()*map_.getBlockSize() )
                    {
                        projectiles_.erase(projectiles_.begin() + i);
                    }
@@ -243,10 +264,23 @@ public:
 
 
             currentSpeed -= player_.getCar().getDrag();
-            if (currentSpeed < 0.f)
+            currentSpeedX -= player_.getCar().getDrag()/2 * cos((rot / 180.f) * 3.14f);
+            currentSpeedY -= player_.getCar().getDrag()/2 * sin((rot / 180.f) * 3.14f);
+
+            if (currentSpeed < 0.f){
                 currentSpeed = 0.f;
-            else if (currentSpeed > player_.getCar().getMaxSpeed() && boostClock.getElapsedTime().asMilliseconds() > 700)
-                currentSpeed = player_.getCar().getMaxSpeed();
+                currentSpeedX = 0.f;
+                currentSpeedY = 0.f;
+            }
+                
+            else if (currentSpeed > player_.getCar().getMaxSpeed() && boostClock.getElapsedTime().asMilliseconds() > 700){
+                currentSpeed= player_.getCar().getMaxSpeed();
+                currentSpeedX = currentSpeed* cos((rot / 180.f) * 3.14f);
+                currentSpeedY = currentSpeed* sin((rot / 180.f) * 3.14f);
+
+            }
+                
+
             if (rot > 360.f)
                 rot = 0.f;
             else if (rot < 0.f)
@@ -263,12 +297,12 @@ public:
             int offsetInTileY = playerY-blockY*map_.getBlockSize();
 
 
-            float xChange = currentSpeed * cos((rot / 180.f) * 3.14f);
-            float yChange = currentSpeed * sin((rot / 180.f) * 3.14f);
+            float xChange = currentSpeedX;// * cos((rot / 180.f) * 3.14f);
+            float yChange = currentSpeedY;// * sin((rot / 180.f) * 3.14f);
 
-
+// TODO: fix performance issue.
             //check if hit game object
-            for(size_t i = 0; i < tarSpills_.size(); i++){
+/*            for(size_t i = 0; i < tarSpills_.size(); i++){
                 if(tarSpills_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
                     currentSpeed = 0;
                 }
@@ -283,7 +317,7 @@ public:
                 }
 
             }
-
+*/
 
             if(playerX<0 || playerY<0 || blockX>=map_.getMapWidth() || blockY>=map_.getMapHeight()){
                 xChange *=-3.f;
@@ -351,6 +385,13 @@ public:
 
                     netprojSprite.setPosition(pro.first,pro.second);
                     window.draw(netprojSprite);
+
+                    //if(netprojSprite.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
+                    //    player_.hit();
+                    //    netProjectiles_.erase(netProjectiles_.begin() + i);
+                    //}
+
+
                 }
 
 
@@ -368,14 +409,14 @@ public:
 
             }
 
-
-            for(auto it : tarSpills_){
-                window.draw(it.sprite_);
-            }
+// TODO: fix performance issue.
+           // for(auto it : tarSpills_){
+           //     window.draw(it.sprite_);
+            //}
             
-            for(auto it : boosts_){
-                window.draw(it.sprite_);
-            }
+            //for(auto it : boosts_){
+            //    window.draw(it.sprite_);
+            //}
             for(auto it : projectiles_){
                 window.draw(it.sprite_);
             }
@@ -555,7 +596,7 @@ int main()
     std::string addr=menuOpts[0];
     std::string name=menuOpts[1];
     std::cout << addr << "  " << name << std::endl;
-    Map kartta("map3.map");
+
 
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
 
@@ -564,13 +605,15 @@ int main()
 
 
     Network aa(addr);
-    if(addr!="n") aa.connect(pelaaja);
+    if(addr!="n") aa.connect(pelaaja); // do we retain this feature?
     Network *verkko = &aa;
 
 
+    Map kartta(aa.getServerMap());
+
     Game peli(kartta, pelaaja, verkko);
     
-    int res = peli.run(window,windowX, windowY);
+    int res = peli.run(window,windowX, windowY,425,312);
 
     return res;
 }
