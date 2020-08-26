@@ -8,3 +8,5 @@ serv.exe
 game.exe
 /src/assets/collisionMaker.o
 /src/assets/tileEdit.exe
+/src/assets/mapMaker.o
+/src/assets/mapEdit.exe
