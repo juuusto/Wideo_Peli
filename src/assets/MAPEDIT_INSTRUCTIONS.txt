@@ -1,3 +1,7 @@
+buildtools.bat
+- script used to build all maptools
+
+
 mapEdit 
 - use this tool to create map files.
 
@@ -14,5 +18,14 @@ new				- clear all program map variables
 clearmap			- clear map tile contents
 
 
+tileEdit:
+- use this tool to create tile collisions
 
 
+command reference:
+LMB 		- add collisions by painting on screen
+RMB 		- remove collisions by painting on screen
+S 		- save collisions to tile_tmp.dat (rename to correct tile data name by hand)
+L 		- load existing collision from tile<tilenumber>.dat
+ARROW_UP 	- increase brush size
+ARROW_DOWN 	- decrease brush size

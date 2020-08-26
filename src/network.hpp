@@ -1,16 +1,19 @@
 #include <SFML/Network.hpp>
-#include<iostream>
+#include <iostream>
 
-struct playerData{
+struct playerData
+{
     int x;
     int y;
     int r;
     int type;
     std::string name;
 };
-class Network {
-    public:
-    Network(std::string serveraddr="127.0.0.1", unsigned short inPort=54000, unsigned short outPort=54010):serveraddr_(serveraddr),inPort_(inPort),outPort_(outPort),connected_(false){
+class Network
+{
+public:
+    Network(std::string serveraddr = "127.0.0.1", unsigned short inPort = 54000, unsigned short outPort = 54010) : serveraddr_(serveraddr), inPort_(inPort), outPort_(outPort), connected_(false)
+    {
         // bind the socket to a port
         if (socket_.bind(inPort) != sf::Socket::Done)
         {
@@ -18,7 +21,8 @@ class Network {
         }
         socket_.setBlocking(false);
     }
-    ~Network(){
+    ~Network()
+    {
         data_.clear();
         socket_.unbind();
     }
@@ -31,17 +35,18 @@ class Network {
     void refreshAssetData(std::vector<Projectile> pr);
     playerData getPlayerData(int id);
     std::vector<playerData> getPlayerDataAll();
-    std::vector<std::pair<int,int>> getProjectileDataAll();
+    std::vector<std::pair<int, int>> getProjectileDataAll();
     int getPlayerCount();
     std::string getServerMap();
-    private:
-        std::string serveraddr_;
-        unsigned short inPort_;
-        unsigned short outPort_;
-        bool connected_;
-        sf::UdpSocket socket_;
-        std::vector<playerData> data_;
-        std::vector<std::pair<int,int>> projdata_;
-        int conId_;
-        std::string srvMap_;
+
+private:
+    std::string serveraddr_;
+    unsigned short inPort_;
+    unsigned short outPort_;
+    bool connected_;
+    sf::UdpSocket socket_;
+    std::vector<playerData> data_;
+    std::vector<std::pair<int, int>> projdata_;
+    int conId_;
+    std::string srvMap_;
 };
