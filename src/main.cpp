@@ -1,4 +1,3 @@
-
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <math.h>
@@ -10,8 +9,7 @@
 #include <vector>
 #include "projectile.hpp"
 #include "network.cpp"
-#include "tar.cpp"
-#include "boost.cpp"
+
 
 
 
@@ -39,6 +37,15 @@ public:
             aaa.loadFromFile(tx.getTileName());
             textures.push_back(aaa);
         }
+        sf::Texture boostText;
+        boostText.loadFromFile("assets/boost.png");
+		sf::Sprite boostsprite_;
+        boostsprite_.setTexture(boostText);
+
+        sf::Sprite tarsprite_;
+        sf::Texture tarText;
+        tarText.loadFromFile("assets/tar.png");
+		tarsprite_.setTexture(tarText);
 
         sf::Text UItext;
         sf::Text text;
@@ -84,7 +91,6 @@ float currentSpeedY = 0.f;
 
 
 
-        Tar spill;
 
         for(int i = 0 ; i < map_.getMapWidth() ; i++){
             for(int j = 0 ; j < map_.getMapHeight() ; j++){
@@ -92,24 +98,22 @@ float currentSpeedY = 0.f;
                 if(map_.getTile(i,j).getTileName() == "assets/tile2.png" && rand0 < 3){
                     int rand1 = rand() % 160 + 25;
                     int rand2 = rand() % 160 + 25; 
-                    spill.sprite_.setPosition(i*map_.getBlockSize() + rand1, j * map_.getBlockSize() + rand2);
-                    tarSpills_.push_back(Tar(spill));
+                    tarSpills_.push_back(std::pair<int,int>(i*map_.getBlockSize() + rand1, j * map_.getBlockSize() + rand2));
                 }
              
             }
         }
 
 
-        Boost boost;
-
+        
         for(int i = 0 ; i < map_.getMapWidth() ; i++){
             for(int j = 0 ; j < map_.getMapHeight() ; j++){
                 int rand3 = rand() % 15;
                 if(map_.getTile(i,j).getTileName() == "assets/tile2.png" && rand3 < 3){
                     int rand4 = rand() % 160 + 25;
                     int rand5 = rand() % 160 + 25; 
-                    boost.sprite_.setPosition(i*map_.getBlockSize() + rand4, j * map_.getBlockSize() + rand5);
-                    boosts_.push_back(Boost(boost));
+                    
+                    boosts_.push_back(std::pair<int,int>(i*map_.getBlockSize() + rand4, j * map_.getBlockSize() + rand5));
                 }
              
             }
@@ -300,24 +304,6 @@ float currentSpeedY = 0.f;
             float xChange = currentSpeedX;// * cos((rot / 180.f) * 3.14f);
             float yChange = currentSpeedY;// * sin((rot / 180.f) * 3.14f);
 
-// TODO: fix performance issue.
-            //check if hit game object
-/*            for(size_t i = 0; i < tarSpills_.size(); i++){
-                if(tarSpills_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
-                    currentSpeed = 0;
-                }
-
-            }
-
-              for(size_t i = 0; i < boosts_.size(); i++){
-                if(boosts_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
-                    boostClock.restart();
-                    currentSpeed = 14;
-                   // boosts_.erase(boosts_.begin() + i);
-                }
-
-            }
-*/
 
             if(playerX<0 || playerY<0 || blockX>=map_.getMapWidth() || blockY>=map_.getMapHeight()){
                 xChange *=-3.f;
@@ -409,14 +395,30 @@ float currentSpeedY = 0.f;
 
             }
 
-// TODO: fix performance issue.
-           // for(auto it : tarSpills_){
-           //     window.draw(it.sprite_);
-            //}
+
+            for(auto it : tarSpills_){
+                tarsprite_.setPosition(it.first,it.second);
+                window.draw(tarsprite_);
+                if(tarsprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
+                    currentSpeedX = 0;
+                    currentSpeedY = 0;
+
+                }
+
+
+
+            }
             
-            //for(auto it : boosts_){
-            //    window.draw(it.sprite_);
-            //}
+            for(auto it : boosts_){
+                boostsprite_.setPosition(it.first,it.second);
+                window.draw(boostsprite_);
+                if(boostsprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
+                    boostClock.restart();
+                    currentSpeedX = 14 * cos((rot / 180.f) * 3.14f);
+                    currentSpeedY = 14 * sin((rot / 180.f) * 3.14f);
+
+                }
+            }
             for(auto it : projectiles_){
                 window.draw(it.sprite_);
             }
@@ -432,8 +434,8 @@ private:
     Map map_;
     Player player_;
     Network* net_;
-    std::vector<Tar> tarSpills_;
-    std::vector<Boost> boosts_;
+    std::vector<std::pair<int,int>> tarSpills_;
+    std::vector<std::pair<int,int>> boosts_;
     sf::Clock boostClock;
     std::vector<Projectile> projectiles_;
     sf::Clock shootingClock;
