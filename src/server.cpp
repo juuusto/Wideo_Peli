@@ -172,10 +172,10 @@ int main(int argc, char *argv[])
         }
 
         sf::IpAddress sender;
-        char data[100];
+        char data[1300];
         std::size_t received;
         unsigned short port;
-        if (socket.receive(data, 100, received, sender, port) != sf::Socket::Done)
+        if (socket.receive(data, 1300, received, sender, port) != sf::Socket::Done)
         {
             // error...
         }
@@ -244,6 +244,7 @@ int main(int argc, char *argv[])
                 int ar = pd.r;
                 res += std::to_string(ax) + ";" + std::to_string(ay) + ";" + std::to_string(ar) + ";" + std::to_string(100 + pd.type) + ";" + pd.name + ";";
             }
+            std::cout <<res<<"\n";
         }
         else if (tmp_arr[0] == "UASSETS")
         {

@@ -73,10 +73,10 @@ void Network::refreshData(playerData pd)
     }
 
     sf::IpAddress sender;
-    char data[300];
+    char data[1300];
     std::size_t received;
     unsigned short port;
-    if (socket_.receive(data, 100, received, sender, port) != sf::Socket::Done)
+    if (socket_.receive(data, 1300, received, sender, port) != sf::Socket::Done)
     {
         // error...
     }
