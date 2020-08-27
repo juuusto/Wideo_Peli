@@ -27,13 +27,14 @@ public:
         int checkpointMAX = 3;
         int winLapCount = 2;
         int selectedType = 0;
+        std::string gameEnd = "";
         sf::View view(sf::FloatRect(0.f, 20.f, windowX, windowY - 20.f));
 
         std::vector<sf::Texture> textures;
         for (auto tx : map_.getTiles())
         {
             sf::Texture aaa;
-
+            
             aaa.loadFromFile(tx.getTileName());
             textures.push_back(aaa);
         }
@@ -171,6 +172,7 @@ public:
         while (window.isOpen())
         {
 
+
             sf::Event event;
             while (window.pollEvent(event))
             {
@@ -207,6 +209,14 @@ public:
                 currentSpeed *=0.93f;
             }
                 
+            if(gameEnd != ""){
+
+                window.clear();
+                text.setString(gameEnd);
+                window.draw(text);
+                window.display();
+                continue;
+            }
 
             //shooting variables
             Projectile projectile;
@@ -319,11 +329,19 @@ if (checkHere == currentCheckpoint+1){
     currentCheckpoint = 1;
 }
 
-if(currentLap == winLapCount){
-// win condition
-    currentLap = 20;
-}
 
+if(currentLap == winLapCount){
+    if(net_->iWin()){
+        gameEnd = "YOU WIN";
+    } else {
+        gameEnd = "YOU ALMOST WON";
+    }
+    //currentLap = 20;
+} else {
+    if(!net_->gameNotDone()) {
+        gameEnd = "YOU LOST";
+    }
+}
 
 
             text.setString(

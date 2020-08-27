@@ -165,3 +165,74 @@ std::string Network::getServerMap()
 {
     return srvMap_;
 }
+
+bool Network::iWin()
+{
+    socket_.setBlocking(true);
+    sf::IpAddress recipient = serveraddr_;
+    std::string data2 = "IWIN;" + std::to_string(conId_) + ";";
+
+    if (socket_.send(data2.c_str(), data2.size() + 1, recipient, outPort_) != sf::Socket::Done)
+    {
+        // error...
+    }
+
+    sf::IpAddress sender;
+    char data[300];
+    std::size_t received;
+    unsigned short port;
+    if (socket_.receive(data, 100, received, sender, port) != sf::Socket::Done)
+    {
+        // error...
+    }
+
+    if (received == 0)
+        return false;
+    std::string s(data);
+    socket_.setBlocking(false);
+    try
+    {
+        std::vector<std::string> tmpData = this->parseData(s);
+        return tmpData[0]=="OK";
+    }
+    catch (const std::exception &e)
+    {
+    }
+    
+    return false;
+}
+bool Network::gameNotDone()
+{
+    socket_.setBlocking(true);
+    sf::IpAddress recipient = serveraddr_;
+    std::string data2 = "GAMESTATUS;" + std::to_string(conId_) + ";";
+
+    if (socket_.send(data2.c_str(), data2.size() + 1, recipient, outPort_) != sf::Socket::Done)
+    {
+        // error...
+    }
+
+    sf::IpAddress sender;
+    char data[300];
+    std::size_t received;
+    unsigned short port;
+    if (socket_.receive(data, 100, received, sender, port) != sf::Socket::Done)
+    {
+        // error...
+    }
+
+    if (received == 0)
+        return false;
+    std::string s(data);
+    socket_.setBlocking(false);
+    try
+    {
+        std::vector<std::string> tmpData = this->parseData(s);
+        return tmpData[0]=="KEEPGOING";
+    }
+    catch (const std::exception &e)
+    {
+    }
+    
+    return false;
+}
