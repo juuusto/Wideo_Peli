@@ -294,11 +294,25 @@ public:
                 // if collision, dont allow move (reverse move)
                 xChange *= -3.f;
                 yChange *= -3.f;
+                int blockXT = (playerX+xChange) / map_.getBlockSize();
+                int blockYT = (playerY+yChange) / map_.getBlockSize();
+
+                int offsetInTileXT = playerX+xChange - blockXT * map_.getBlockSize();
+                int offsetInTileYT = playerY+yChange - blockYT * map_.getBlockSize();
+
+                if(map_.getTile(blockXT, blockYT).isCollision(offsetInTileXT, offsetInTileYT)){
+                    xChange = 0;
+                    yChange = 0;
+                }
+
+                playerX - blockX * map_.getBlockSize();
+            int offsetInTileY = playerY - blockY * map_.getBlockSize();
             }
 
             text.setString(
                 "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX, blockY)) + "   " + std::to_string(boostClock.getElapsedTime().asSeconds()) +
-                "\nW:" + std::to_string(view.getSize().x) + " H:" + std::to_string(view.getSize().y) + " OffsetXinTile:" + std::to_string(offsetInTileX) + " OffsetYinTile:" + std::to_string(offsetInTileY));
+                "\nW:" + std::to_string(view.getSize().x) + " H:" + std::to_string(view.getSize().y) + " OffsetXinTile:" + std::to_string(offsetInTileX) + " OffsetYinTile:" + std::to_string(offsetInTileY)+
+                "\n playerX:"+std::to_string(playerSprite.getPosition().x)+" playerY:"+std::to_string(playerSprite.getPosition().y));
 
             UItext.setString(
                 "Ammo:" + std::to_string(player_.getAmmo()) + "     CD: " + std::to_string(shootingClock.getElapsedTime().asSeconds()) + "       HP: " + std::to_string(player_.getHp()));
