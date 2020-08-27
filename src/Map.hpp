@@ -120,7 +120,7 @@ public:
     Tile getTile(int x, int y);
 
     int getTileId(int x, int y);
-
+    int getTileCheckpoint(int x, int y);
     std::vector<Tile> getTiles();
 
     void setTile(int x, int y, int value);

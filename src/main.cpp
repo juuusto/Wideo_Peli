@@ -22,7 +22,10 @@ public:
     }
     int run(sf::RenderWindow &window, int windowX = 800, int windowY = 600, int startX = 425, int startY = 312)
     {
-
+        int currentLap = 0;
+        int currentCheckpoint= 1;
+        int checkpointMAX = 3;
+        int winLapCount = 2;
         int selectedType = 0;
         sf::View view(sf::FloatRect(0.f, 20.f, windowX, windowY - 20.f));
 
@@ -305,14 +308,29 @@ public:
                     yChange = 0;
                 }
 
-                playerX - blockX * map_.getBlockSize();
-            int offsetInTileY = playerY - blockY * map_.getBlockSize();
             }
+
+// checkpoints
+int checkHere = map_.getTileCheckpoint( blockX, blockY);
+if (checkHere == currentCheckpoint+1){
+    currentCheckpoint++;
+} else if (checkHere == 1 && currentCheckpoint == checkpointMAX){
+    currentLap++;
+    currentCheckpoint = 1;
+}
+
+if(currentLap == winLapCount){
+// win condition
+    currentLap = 20;
+}
+
+
 
             text.setString(
                 "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX, blockY)) + "   " + std::to_string(boostClock.getElapsedTime().asSeconds()) +
                 "\nW:" + std::to_string(view.getSize().x) + " H:" + std::to_string(view.getSize().y) + " OffsetXinTile:" + std::to_string(offsetInTileX) + " OffsetYinTile:" + std::to_string(offsetInTileY)+
-                "\n playerX:"+std::to_string(playerSprite.getPosition().x)+" playerY:"+std::to_string(playerSprite.getPosition().y) +"\nspeedForward:"+std::to_string(currentSpeed)+"speedSide"+std::to_string(currentSpeedSide));
+                "\n playerX:"+std::to_string(playerSprite.getPosition().x)+" playerY:"+std::to_string(playerSprite.getPosition().y) +"\nspeedForward:"+std::to_string(currentSpeed)+"speedSide"+std::to_string(currentSpeedSide)+
+                "\nLap:"+std::to_string(currentLap) + " cPoint:"+std::to_string(currentCheckpoint)+ " tilecPoint:"+std::to_string(checkHere));
 
             UItext.setString(
                 "Ammo:" + std::to_string(player_.getAmmo()) + "     CD: " + std::to_string(shootingClock.getElapsedTime().asSeconds()) + "       HP: " + std::to_string(player_.getHp()));

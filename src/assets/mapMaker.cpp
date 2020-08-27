@@ -89,7 +89,8 @@ int main()
         else if (command == "setlinks")
         {
             std::cin >> usableTilesCount;
-            resizeTiles(usableTilesCount, linkData);
+            resizeMap(linkData.size(), 1, usableTilesCount, 1, linkData);
+            //resizeTiles(usableTilesCount, linkData);
         }
         else if (command == "link")
         {
@@ -104,8 +105,8 @@ int main()
         }
         else if (command == "tile")
         {
-            int mody;
-            int modx;
+            unsigned int mody;
+            unsigned int modx;
             int tmp = 0;
             std::cin >> modx;
             std::cin >> mody;

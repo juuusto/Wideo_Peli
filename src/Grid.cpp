@@ -4,9 +4,12 @@ std::pair<int, int> Grid::getSize() { return std::make_pair(width_, height_); }
 
 int Grid::getTileAtCoordinate(int x, int y)
 {
-    return map[y * width_ + x];
+    return map[y * width_ + x]&0x3F;
 }
-
+int Grid::getTileCheckpointAt(int x, int y)
+{
+    return (map[y * width_ + x]>>6)&0x3;
+}
 Grid::Grid(){};
 
 std::vector<int> &Grid::getGrid() { return map; }
