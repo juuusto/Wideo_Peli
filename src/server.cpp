@@ -107,6 +107,7 @@ bool loadServerMap(std::string &SRV_MAP, std::vector<std::vector<std::pair<int, 
 
 int main(int argc, char *argv[])
 {
+    bool gameon = true;
     if (argc<2){
         std::cout << "Please give map file name\n Usage:"<<argv[0]<< " <map filename>\n";
         return 0;
@@ -149,7 +150,7 @@ int main(int argc, char *argv[])
         currentTime = std::time(nullptr);
         betterTime = std::chrono::steady_clock::now();
 
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(betterTime - aiUptdTime).count() > 50)
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(betterTime - aiUptdTime).count() > 30)
         {
             aiUptdTime = betterTime;
             for (int ThisAi = 0; ThisAi < aiPlayers.size(); ThisAi++)
@@ -278,6 +279,19 @@ int main(int argc, char *argv[])
             }
 
             res += "PLAYERCOUNT;" + std::to_string(pCount) + ";";
+        }
+        else if (tmp_arr[0] == "IWIN")
+        {
+            std::cout << "game ended\n";
+            res = "OK;";
+            gameon = false;
+
+        }
+        else if (tmp_arr[0] == "GAMESTATUS")
+        {
+            if(gameon)res = "KEEPGOING;";
+            else res = "DONEDEAL;";
+
         }
         //std::cout << res <<"\n"<<std::endl;
         if (socket.send(res.c_str(), res.size() + 1, sender, outPort) != sf::Socket::Done)

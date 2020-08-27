@@ -33,6 +33,10 @@ int Map::getTileId(int x, int y)
 {
     return grid.getTileAtCoordinate(x, y);
 }
+int Map::getTileCheckpoint(int x, int y)
+{
+    return grid.getTileCheckpointAt(x, y);
+}
 
 void Map::setTile(int x, int y, int value)
 {

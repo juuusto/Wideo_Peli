@@ -14,7 +14,7 @@ public:
     std::pair<int, int> getSize();
 
     int getTileAtCoordinate(int x, int y);
-
+    int getTileCheckpointAt(int x, int y);
     std::vector<int> &getGrid();
 
     void setGrid();

@@ -45,6 +45,10 @@ bool Network::connect(Player player)
     socket_.setBlocking(false);
     return connected_;
 }
+void Network::setAddress(std::string address)
+{
+    serveraddr_=address;
+}
 int Network::getConId()
 {
     return conId_;
@@ -128,7 +132,7 @@ void Network::refreshAssetData(std::vector<Projectile> pr)
     try
     {
         std::vector<std::string> tmpData = this->parseData(s);
-        if (tmpData.size() > 0)
+        if (projdata_.size() > 0)
             projdata_.clear();
         for (int j = 0; j < tmpData.size(); j += 2)
         {
@@ -160,4 +164,75 @@ int Network::getPlayerCount()
 std::string Network::getServerMap()
 {
     return srvMap_;
+}
+
+bool Network::iWin()
+{
+    socket_.setBlocking(true);
+    sf::IpAddress recipient = serveraddr_;
+    std::string data2 = "IWIN;" + std::to_string(conId_) + ";";
+
+    if (socket_.send(data2.c_str(), data2.size() + 1, recipient, outPort_) != sf::Socket::Done)
+    {
+        // error...
+    }
+
+    sf::IpAddress sender;
+    char data[300];
+    std::size_t received;
+    unsigned short port;
+    if (socket_.receive(data, 100, received, sender, port) != sf::Socket::Done)
+    {
+        // error...
+    }
+
+    if (received == 0)
+        return false;
+    std::string s(data);
+    socket_.setBlocking(false);
+    try
+    {
+        std::vector<std::string> tmpData = this->parseData(s);
+        return tmpData[0]=="OK";
+    }
+    catch (const std::exception &e)
+    {
+    }
+    
+    return false;
+}
+bool Network::gameNotDone()
+{
+    socket_.setBlocking(true);
+    sf::IpAddress recipient = serveraddr_;
+    std::string data2 = "GAMESTATUS;" + std::to_string(conId_) + ";";
+
+    if (socket_.send(data2.c_str(), data2.size() + 1, recipient, outPort_) != sf::Socket::Done)
+    {
+        // error...
+    }
+
+    sf::IpAddress sender;
+    char data[300];
+    std::size_t received;
+    unsigned short port;
+    if (socket_.receive(data, 100, received, sender, port) != sf::Socket::Done)
+    {
+        // error...
+    }
+
+    if (received == 0)
+        return false;
+    std::string s(data);
+    socket_.setBlocking(false);
+    try
+    {
+        std::vector<std::string> tmpData = this->parseData(s);
+        return tmpData[0]=="KEEPGOING";
+    }
+    catch (const std::exception &e)
+    {
+    }
+    
+    return false;
 }
