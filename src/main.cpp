@@ -478,7 +478,7 @@ public:
             window.draw(UItext);
 
             //check for winner (5 laps)
-            if(player_.getLaps() == 2){
+            if(player_.getLaps() == 5){
                 
                 window.draw(wintext);
             }
