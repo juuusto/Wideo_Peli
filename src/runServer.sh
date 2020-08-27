@@ -1,1 +1,1 @@
-./serv map3.srv
+./serv map3b.srv

@@ -17,9 +17,17 @@ public:
     {
         return name_;
     };
+    void setName(std::string name)
+    {
+        name_ =name;
+    };
     Vehicle getCar()
     {
         return car_;
+    };
+    void setCar(Vehicle car)
+    {
+         car_=car;
     };
     int getAmmo()
     {

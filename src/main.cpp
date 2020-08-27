@@ -69,10 +69,9 @@ public:
         window.setView(view);
 
         float currentSpeed = 0.f;
-        float currentSpeedX = 0.f;
-        float currentSpeedY = 0.f;
+        float currentSpeedSide = 0.f;
 
-        // loading textures (implement textureloader class?)
+        // loading textures 
         sf::Texture car;
         if (!car.loadFromFile(player_.getCar().getSprite()))
         {
@@ -89,11 +88,11 @@ public:
         {
             for (int j = 0; j < map_.getMapHeight(); j++)
             {
-                int rand0 = rand() % 12;
-                if (map_.getTile(i, j).getTileName() == "assets/tile2.png" && rand0 < 3)
+                int rand0 = rand() % 15;
+                int rand1 = rand() % 160 + 25;
+                int rand2 = rand() % 160 + 25;
+                if (rand0 < 3  && !map_.getTile(i, j).isCollision(rand1,rand2))
                 {
-                    int rand1 = rand() % 160 + 25;
-                    int rand2 = rand() % 160 + 25;
                     tarSpills_.push_back(std::pair<int, int>(i * map_.getBlockSize() + rand1, j * map_.getBlockSize() + rand2));
                 }
             }
@@ -104,11 +103,10 @@ public:
             for (int j = 0; j < map_.getMapHeight(); j++)
             {
                 int rand3 = rand() % 15;
-                if (map_.getTile(i, j).getTileName() == "assets/tile2.png" && rand3 < 3)
-                {
                     int rand4 = rand() % 160 + 25;
                     int rand5 = rand() % 160 + 25;
-
+                if (rand3 < 3 && !map_.getTile(i, j).isCollision(rand4,rand5))
+                {
                     boosts_.push_back(std::pair<int, int>(i * map_.getBlockSize() + rand4, j * map_.getBlockSize() + rand5));
                 }
             }
@@ -188,20 +186,24 @@ public:
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
             {
-                currentSpeedX += player_.getCar().getAcceleration() * cos((rot / 180.f) * 3.14f);
-                currentSpeedY += player_.getCar().getAcceleration() * sin((rot / 180.f) * 3.14f);
                 currentSpeed += player_.getCar().getAcceleration();
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
             {
-                currentSpeedX -= player_.getCar().getAcceleration() * cos((rot / 180.f) * 3.14f);
-                currentSpeedY -= player_.getCar().getAcceleration() * sin((rot / 180.f) * 3.14f);
                 currentSpeed -= player_.getCar().getAcceleration();
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
                 rot -= player_.getCar().getTurnSpeed();
-            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+                currentSpeedSide += 0.1f*currentSpeed;
+                currentSpeed *=0.93f;
+            }
+
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
                 rot += player_.getCar().getTurnSpeed();
+                currentSpeedSide -= 0.1f*currentSpeed;
+                currentSpeed *=0.93f;
+            }
+                
 
             //shooting variables
             Projectile projectile;
@@ -222,7 +224,7 @@ public:
                 player_.shoot();
                 shootingSound.play();
                 projectile.sprite_.setPosition(playerSpriteCenter);
-                projectile.speed_ = aimDirectionNorm * projectile.maxSpeed_;
+                projectile.speed_ = aimDirectionNorm * (projectile.maxSpeed_+currentSpeed);
                 projectiles_.push_back(Projectile(projectile));
             }
 
@@ -239,31 +241,26 @@ public:
             }
 
             //checking for other players projectiles hitting you
-            for (size_t i = 0; i < netProjectiles_.size(); i++)
+           /* for (size_t i = 0; i < netProjectiles_.size(); i++)
             {
                 if (netProjectiles_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds()))
                 {
                     player_.hit();
                     netProjectiles_.erase(netProjectiles_.begin() + i);
                 }
-            }
+            }*/
 
             currentSpeed -= player_.getCar().getDrag();
-            currentSpeedX -= player_.getCar().getDrag() / 2 * cos((rot / 180.f) * 3.14f);
-            currentSpeedY -= player_.getCar().getDrag() / 2 * sin((rot / 180.f) * 3.14f);
+            currentSpeedSide *= 0.85f;
 
             if (currentSpeed < 0.f)
             {
                 currentSpeed = 0.f;
-                currentSpeedX = 0.f;
-                currentSpeedY = 0.f;
             }
 
             else if (currentSpeed > player_.getCar().getMaxSpeed() && boostClock.getElapsedTime().asMilliseconds() > 700)
             {
                 currentSpeed = player_.getCar().getMaxSpeed();
-                currentSpeedX = currentSpeed * cos((rot / 180.f) * 3.14f);
-                currentSpeedY = currentSpeed * sin((rot / 180.f) * 3.14f);
             }
 
             if (rot > 360.f)
@@ -281,8 +278,11 @@ public:
             int offsetInTileX = playerX - blockX * map_.getBlockSize();
             int offsetInTileY = playerY - blockY * map_.getBlockSize();
 
-            float xChange = currentSpeedX; // * cos((rot / 180.f) * 3.14f);
-            float yChange = currentSpeedY; // * sin((rot / 180.f) * 3.14f);
+            float xChange = currentSpeed * cos((rot / 180.f) * 3.14f);
+            float yChange = currentSpeed * sin((rot / 180.f) * 3.14f);
+            xChange += currentSpeedSide * cos(((rot+90) / 180.f) * 3.14f);
+            yChange += currentSpeedSide * sin(((rot+90) / 180.f) * 3.14f);
+
 
             if (playerX < 0 || playerY < 0 || blockX >= map_.getMapWidth() || blockY >= map_.getMapHeight())
             {
@@ -312,7 +312,7 @@ public:
             text.setString(
                 "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX, blockY)) + "   " + std::to_string(boostClock.getElapsedTime().asSeconds()) +
                 "\nW:" + std::to_string(view.getSize().x) + " H:" + std::to_string(view.getSize().y) + " OffsetXinTile:" + std::to_string(offsetInTileX) + " OffsetYinTile:" + std::to_string(offsetInTileY)+
-                "\n playerX:"+std::to_string(playerSprite.getPosition().x)+" playerY:"+std::to_string(playerSprite.getPosition().y));
+                "\n playerX:"+std::to_string(playerSprite.getPosition().x)+" playerY:"+std::to_string(playerSprite.getPosition().y) +"\nspeedForward:"+std::to_string(currentSpeed)+"speedSide"+std::to_string(currentSpeedSide));
 
             UItext.setString(
                 "Ammo:" + std::to_string(player_.getAmmo()) + "     CD: " + std::to_string(shootingClock.getElapsedTime().asSeconds()) + "       HP: " + std::to_string(player_.getHp()));
@@ -379,6 +379,13 @@ public:
                     if (pd.type != net_->getConId())
                     {
                         window.draw(netSprite);
+
+                        for (size_t i = 0; i < projectiles_.size(); i++){
+                            if(projectiles_[i].sprite_.getGlobalBounds().intersects(netSprite.getGlobalBounds())){
+                                projectiles_.erase(projectiles_.begin() + i);
+                            }
+                        }
+
                         window.draw(nameTag);
                     }
                 }
@@ -390,8 +397,8 @@ public:
                 window.draw(tarsprite_);
                 if (tarsprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds()))
                 {
-                    currentSpeedX = 0;
-                    currentSpeedY = 0;
+                    currentSpeed= 0;
+
                 }
             }
 
@@ -402,13 +409,15 @@ public:
                 if (boostsprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds()))
                 {
                     boostClock.restart();
-                    currentSpeedX = 14 * cos((rot / 180.f) * 3.14f);
-                    currentSpeedY = 14 * sin((rot / 180.f) * 3.14f);
+                    currentSpeed = 14 ;
                 }
             }
             for (auto it : projectiles_)
             {
-                window.draw(it.sprite_);
+                //window.draw(it.sprite_);
+                if(it.sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds()) && shootingClock.getElapsedTime().asMilliseconds() > 200){
+                    player_.hit();
+                }
             }
             window.draw(playerSprite);
             window.draw(text);
@@ -430,7 +439,7 @@ private:
     std::vector<Projectile> netProjectiles_;
 };
 
-std::vector<std::string> mainMenu(sf::RenderWindow &window, int windowX = 800, int windowY = 600)
+std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText, int windowX = 800, int windowY = 600)
 {
     int menuOpt = -1;
     int tmpOpt = 0;
@@ -439,6 +448,7 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window, int windowX = 800, i
     std::vector<std::string> resvector;
     resvector.push_back("127.0.0.1");
     resvector.push_back("unknown peli ukko");
+    resvector.push_back("");
     std::vector<std::string> inputTextvector;
     inputTextvector.push_back("Address");
     inputTextvector.push_back("Player Name");
@@ -480,6 +490,8 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window, int windowX = 800, i
             {
             case sf::Event::Closed:
                 window.close();
+                resvector[2] = "GAME_EXIT";
+                menuOpt = 3;
                 break;
             default:
                 break;
@@ -545,15 +557,17 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window, int windowX = 800, i
             textInputOn = true;
             valueToEdit = 0;
             inputTextVal = 0;
-            //menuOpt = 3;
+
         }
         else if (menuOpt == 1)
         {
-            //resvector[valueToEdit] = "127.0.0.1";
+
             menuOpt = 3;
+            resvector[2] = "GAME_CONNECT";
         }
         else if (menuOpt == 3)
         {
+            resvector[2] = "GAME_EXIT";
             window.close();
         }
 
@@ -570,7 +584,12 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window, int windowX = 800, i
 
             window.draw(text);
         }
-
+        if(menuText!=""){
+            text.setFillColor(sf::Color::White);
+            text.setPosition(350, 570);
+            text.setString(menuText);
+            window.draw(text);
+        }
         window.display();
     }
 }
@@ -581,27 +600,41 @@ int main()
     int windowY = 600;
     sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
 
-    // jokin dynaaminen menu viritelmä tähän väliin?
-
-    std::vector<std::string> menuOpts = mainMenu(window, windowX, windowY);
-
-    //näiden arvojen asettamiset & funktioiden ajamiset voisi tapahtua menun kautta
-    std::string addr = menuOpts[0];
-    std::string name = menuOpts[1];
-    std::cout << addr << "  " << name << std::endl;
-
+    bool inMenu = true;
+    std::string menuMessage = "";
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
+    Player pelaaja("tmp", "", ajoneuvo);
+    Network verkko;
 
-    Player pelaaja(name, "", ajoneuvo);
+    while(inMenu){
 
-    Network aa(addr);
-    if (addr != "n")
-        aa.connect(pelaaja); // do we retain this feature?
-    Network *verkko = &aa;
+        
+        std::vector<std::string> menuOpts = mainMenu(window,menuMessage, windowX, windowY);
+        
 
-    Map kartta(aa.getServerMap());
+        std::string addr = menuOpts[0];
+        std::string name = menuOpts[1];
+        std::cout << addr << "  " << name << std::endl;
 
-    Game peli(kartta, pelaaja, verkko);
+        pelaaja.setName(name);
+
+        verkko.setAddress(addr);
+        if (menuOpts[2] == "GAME_EXIT"){
+            inMenu=false; 
+            //break;
+        }
+        else if (menuOpts[2] == "GAME_CONNECT" && verkko.connect(pelaaja)) {
+            inMenu=false; 
+            
+           // break;
+        }
+        else menuMessage ="Could not connect!";
+    }
+    
+
+    Map kartta(verkko.getServerMap());
+
+    Game peli(kartta, pelaaja, &verkko);
 
     int res = peli.run(window, windowX, windowY, 425, 312);
 

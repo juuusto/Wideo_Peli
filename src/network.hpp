@@ -28,6 +28,7 @@ public:
     }
     std::vector<std::string> parseData(std::string data);
     bool connect(Player player);
+    void setAddress(std::string address);
     int getConId();
     bool disconnect();
     bool isConnected();

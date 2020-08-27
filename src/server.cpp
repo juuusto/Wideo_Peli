@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
         currentTime = std::time(nullptr);
         betterTime = std::chrono::steady_clock::now();
 
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(betterTime - aiUptdTime).count() > 50)
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(betterTime - aiUptdTime).count() > 30)
         {
             aiUptdTime = betterTime;
             for (int ThisAi = 0; ThisAi < aiPlayers.size(); ThisAi++)

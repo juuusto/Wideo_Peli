@@ -45,6 +45,10 @@ bool Network::connect(Player player)
     socket_.setBlocking(false);
     return connected_;
 }
+void Network::setAddress(std::string address)
+{
+    serveraddr_=address;
+}
 int Network::getConId()
 {
     return conId_;
@@ -128,7 +132,7 @@ void Network::refreshAssetData(std::vector<Projectile> pr)
     try
     {
         std::vector<std::string> tmpData = this->parseData(s);
-        if (tmpData.size() > 0)
+        if (projdata_.size() > 0)
             projdata_.clear();
         for (int j = 0; j < tmpData.size(); j += 2)
         {
