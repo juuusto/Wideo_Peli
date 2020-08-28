@@ -68,7 +68,7 @@ public:
             return 0;
         }
         sf::Texture dedTEX;
-        if (!loseTEX.loadFromFile("assets/ded.png"))
+        if (!dedTEX.loadFromFile("assets/ded.png"))
         {
             return 0;
         }
