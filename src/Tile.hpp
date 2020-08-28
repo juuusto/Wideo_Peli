@@ -12,7 +12,7 @@ public:
         return tilename_;
     }
 
-    //TODO: collisions
+    //check collisions, this is done with a matrix that has 1 bit for each offset, so some tricks are needed
     bool isCollision(int x, int y)
     {
         int xC = x / 8;
