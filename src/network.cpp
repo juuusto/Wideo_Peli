@@ -2,6 +2,7 @@
 #include <iostream>
 #include "network.hpp"
 
+// parse ; seperated values to vector from string
 std::vector<std::string> Network::parseData(std::string data)
 {
     std::vector<std::string> retVec;
@@ -16,6 +17,8 @@ std::vector<std::string> Network::parseData(std::string data)
     }
     return retVec;
 }
+
+// connect the player
 bool Network::connect(Player player)
 {
     socket_.setBlocking(true);
@@ -36,6 +39,7 @@ bool Network::connect(Player player)
     }
     std::string s(data);
     std::vector<std::string> tmpData = this->parseData(s);
+    // save the values and id given by server
     if (tmpData.size() == 4 && tmpData[0] == "OK")
     {
         conId_ = std::stoi(tmpData[1]);
@@ -46,10 +50,14 @@ bool Network::connect(Player player)
     socket_.setBlocking(false);
     return connected_;
 }
+
+// set connection address
 void Network::setAddress(std::string address)
 {
     serveraddr_=address;
 }
+
+// get player id
 int Network::getConId()
 {
     return conId_;
@@ -58,10 +66,14 @@ bool Network::disconnect()
 {
     return !connected_;
 }
+
+// get connection status
 bool Network::isConnected()
 {
     return connected_;
 }
+
+// send and recieve player locations
 void Network::refreshData(playerData pd)
 {
     socket_.setBlocking(true);
@@ -85,7 +97,7 @@ void Network::refreshData(playerData pd)
     if (received == 0)
         return;
     std::string s(data);
-
+    // parse data from other players
     try
     {
         std::vector<std::string> tmpData = this->parseData(s);
@@ -101,7 +113,7 @@ void Network::refreshData(playerData pd)
     }
     socket_.setBlocking(false);
 }
-
+// update projectile locations
 void Network::refreshAssetData(std::vector<Projectile> pr)
 {
     socket_.setBlocking(true);
@@ -129,7 +141,7 @@ void Network::refreshAssetData(std::vector<Projectile> pr)
     if (received == 0)
         return;
     std::string s(data);
-
+    // parse received projectiles
     try
     {
         std::vector<std::string> tmpData = this->parseData(s);
@@ -145,6 +157,8 @@ void Network::refreshAssetData(std::vector<Projectile> pr)
     }
     socket_.setBlocking(false);
 }
+
+// get data for spesific player
 playerData Network::getPlayerData(int id)
 {
     return data_[id];
@@ -171,6 +185,7 @@ std::string Network::getServerMap()
     return srvMap_;
 }
 
+// declare to the server that you won :^)
 bool Network::iWin()
 {
     socket_.setBlocking(true);
@@ -206,6 +221,8 @@ bool Network::iWin()
     
     return false;
 }
+
+// get status of game
 int Network::gameStatus()
 {
     socket_.setBlocking(true);

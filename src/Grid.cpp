@@ -4,11 +4,11 @@ std::pair<int, int> Grid::getSize() { return std::make_pair(width_, height_); }
 
 int Grid::getTileAtCoordinate(int x, int y)
 {
-    return map[y * width_ + x]&0x3F;
+    return map[y * width_ + x]&0x3F; // mask top 2 bits off to get tile id
 }
 int Grid::getTileCheckpointAt(int x, int y)
 {
-    return (map[y * width_ + x]>>6)&0x3;
+    return (map[y * width_ + x]>>6)&0x3;    // take only top 2 bits to get checkpoint value of this tile (0 = no checkpoint)
 }
 Grid::Grid(){};
 

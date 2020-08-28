@@ -33,6 +33,8 @@ struct projectileData
     int y;
 };
 
+
+// calculate direction for ai
 float calcAIrotDiff(int ox, int oy, int nx, int ny)
 {
 
@@ -56,6 +58,8 @@ float calcAIrotDiff(int ox, int oy, int nx, int ny)
     }
 }
 
+
+// load mapfile
 bool loadServerMap(std::string &SRV_MAP, std::vector<std::vector<std::pair<int, int>>> &aiDat, std::string mapname)
 {
     std::ifstream mapf("./assets/"+mapname);
@@ -86,9 +90,9 @@ bool loadServerMap(std::string &SRV_MAP, std::vector<std::vector<std::pair<int, 
                 mapf.read((char *)&y, 4);
                 std::cout << "X:" << x << "Y:" << y << "\n";
 
-                if (x == 0 && y == 0)
+                if (x == 0 && y == 0)   // this ai is done, load the next one
                     break;
-                else if (x == 0xFFFFFFFF && y == 0xFFFFFFFF)
+                else if (x == 0xFFFFFFFF && y == 0xFFFFFFFF) // terminate reading of ai players
                 {
                     readMore = false;
                     break;
@@ -106,20 +110,22 @@ bool loadServerMap(std::string &SRV_MAP, std::vector<std::vector<std::pair<int, 
     }
 }
 
+
+// main server function
 int main(int argc, char *argv[])
 {
+    // how many laps to play for
     int winLapCount = 2;
  
     if (argc<3){
         std::cout << "Please give map file name\n Usage:"<<argv[0]<< " <map filename> <pcount>\n";
         return 0;
     }
+    // start initializing server variables
     int wantedPcount = std::stoi(argv[2]);
     std::cout <<"Pcount:"<< std::to_string(wantedPcount)<< "\n";
     std::string srv_headerfile_name = argv[1];
     std::vector<std::vector<std::pair<int, int>>> aiData;
-    //aiData.push_back( std::vector<std::pair<int, int>> {std::pair<int, int>(500, 300), std::pair<int, int>(800, 400), std::pair<int, int>(1900, 200)});
-    //aiData.push_back( std::vector<std::pair<int, int>> {std::pair<int, int>(600, 200), std::pair<int, int>(500, 400), std::pair<int, int>(2900, 200)});
 
     std::string SERVER_MAP;
 
@@ -141,7 +147,7 @@ int main(int argc, char *argv[])
     std::vector<aiplayerServerData> aiPlayers;
     std::vector<std::vector<projectileData>> projData;
 
-
+    // load ai data to ai structs
     // for AI
     for (int aiPath = 0; aiPath < aiData.size(); aiPath++)
     {
@@ -150,6 +156,8 @@ int main(int argc, char *argv[])
         aiPlayers.push_back(aiplayerServerData{aiX, aiY, 0, aiPath, 15.f, currentTime, aiData[aiPath], 0, "ai",0});
     }
     std::chrono::steady_clock::time_point aiUptdTime = betterTime;
+
+    // game reset loop, this resets the game when a round ends
     while(true){
         bool gameon = true;
         players.clear();
@@ -164,19 +172,23 @@ int main(int argc, char *argv[])
         std::cout << "GAME STARTED!\n";
         time_t gameoverTimeout = 0;//std::time(nullptr);
         bool startGame = false;
+
+        // main loop for command and request handling 
         while (gameon || (std::time(nullptr)-gameoverTimeout)<2)
         {
-
+            // don't start before there are enough players connected
             if(players.size() >= wantedPcount)startGame=true;
             currentTime = std::time(nullptr);
             betterTime = std::chrono::steady_clock::now();
 
+
+            // update ai every 30 ms
             if (std::chrono::duration_cast<std::chrono::milliseconds>(betterTime - aiUptdTime).count() > 30 && startGame)
             {
-                //std::cout << "aaaa!\n";
                 aiUptdTime = betterTime;
                 for (int ThisAi = 0; ThisAi < aiPlayers.size(); ThisAi++)
                 {
+                    // if not at next node, move torwards it 
                     if (abs(aiPlayers[ThisAi].x - aiPlayers[ThisAi].path[aiPlayers[ThisAi].aiTarget].first) > 20 || abs(aiPlayers[ThisAi].y - aiPlayers[ThisAi].path[aiPlayers[ThisAi].aiTarget].second) > 20)
                     {
                         aiPlayers[ThisAi].x += aiPlayers[ThisAi].aiSpeed * cos((aiPlayers[ThisAi].r / 180.f) * 3.14f);
@@ -184,7 +196,7 @@ int main(int argc, char *argv[])
                         aiPlayers[ThisAi].connectTimeout = currentTime;
                         //std::cout << "X:"<<aiPlayers[ThisAi].x<<"Y:"<<aiPlayers[ThisAi].y<<"R:"<< aiPlayers[ThisAi].r<<std::endl;
                     }
-                    else
+                    else // at a node, set the next as target
                     {
                         aiPlayers[ThisAi].aiTarget++;
                         aiPlayers[ThisAi].aiTarget = aiPlayers[ThisAi].aiTarget % aiPlayers[ThisAi].path.size();
@@ -200,7 +212,7 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-
+            // receive next command/ request
             sf::IpAddress sender;
             char data[1300];
             std::size_t received;
@@ -220,6 +232,8 @@ int main(int argc, char *argv[])
             int i = 0;
             std::string command;
             std::vector<std::string> tmp_arr;
+
+            // parse request
             while ((pos = s.find(delimiter)) != std::string::npos)
             {
                 command = s.substr(0, pos);
@@ -228,7 +242,8 @@ int main(int argc, char *argv[])
                 s.erase(0, pos + delimiter.length());
                 i += 1;
             }
-            //std::cout <<"\n" << tmp_arr[0] <<"\n"<<std::endl;
+            
+            // handle the given command
             std::string res;
             if (tmp_arr[0] == "CONNECT")
             {
@@ -263,11 +278,14 @@ int main(int argc, char *argv[])
                 //std::cout << "Update... \n"<<std::endl;
                 players[stoi(tmp_arr[4])] = {stoi(tmp_arr[1]), stoi(tmp_arr[2]), stoi(tmp_arr[3]), stoi(tmp_arr[4]), currentTime, players[stoi(tmp_arr[4])].name};
                 res = "";
+
+                // human players
                 for (playerServerData pd : players)
                 {
                     if (currentTime - pd.connectTimeout < 2)
                         res += std::to_string(pd.x) + ";" + std::to_string(pd.y) + ";" + std::to_string(pd.r) + ";" + std::to_string(pd.type) + ";" + pd.name + ";";
                 }
+                // add ai to the response
                 for (aiplayerServerData pd : aiPlayers)
                 {
                     int ax = pd.x;
@@ -277,7 +295,7 @@ int main(int argc, char *argv[])
                 }
                 std::cout <<res<<"\n";
             }
-            else if (tmp_arr[0] == "UASSETS")
+            else if (tmp_arr[0] == "UASSETS") // update projectiles
             {
                 std::cout << "Update projectiles... \n"
                         << std::endl;
@@ -312,6 +330,7 @@ int main(int argc, char *argv[])
 
                 res += "PLAYERCOUNT;" + std::to_string(pCount) + ";";
             }
+            // handle ending the game
             else if (tmp_arr[0] == "IWIN")
             {
                 gameoverTimeout = std::time(nullptr);
@@ -320,6 +339,7 @@ int main(int argc, char *argv[])
                 gameon = false;
 
             }
+            // give status of game server
             else if (tmp_arr[0] == "GAMESTATUS")
             {
                 players[stoi(tmp_arr[1])].connectTimeout=currentTime;
@@ -328,13 +348,14 @@ int main(int argc, char *argv[])
                 else res = "DONEDEAL;";
 
             }
+            // force start game, not in use currently
             else if (tmp_arr[0] == "START")
             {
                 startGame = true;
                 res = "OK;";
 
             }
-            //std::cout << res <<"\n"<<std::endl;
+            // send the response
             if (socket.send(res.c_str(), res.size() + 1, sender, outPort) != sf::Socket::Done)
             {
                 // error...

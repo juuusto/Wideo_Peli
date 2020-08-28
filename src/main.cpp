@@ -10,6 +10,7 @@
 #include "projectile.hpp"
 #include "network.cpp"
 
+// main class for the game
 class Game
 {
 public:
@@ -20,10 +21,11 @@ public:
     ~Game()
     {
     }
+    // the client part of the game is run here
     int run(sf::RenderWindow &window,bool debugMode, int windowX = 800, int windowY = 600, int startX = 425, int startY = 312)
     {
 
-
+        // load all assets & some client variables
         sf::Text text;
         sf::Font font;
         if (!font.loadFromFile("assets/arial.ttf"))
@@ -73,7 +75,7 @@ public:
             return 0;
         }
 
-        
+        // load tile textures
         std::vector<sf::Texture> textures;
         for (auto tx : map_.getTiles())
         {
@@ -109,7 +111,7 @@ public:
         float currentSpeed = 0.f;
         float currentSpeedSide = 0.f;
 
-        // loading textures 
+        // loading player textures 
         sf::Texture car;
         if (!car.loadFromFile(player_.getCar().getSprite()))
         {
@@ -122,6 +124,7 @@ public:
             return 0;
         }
 
+        // create random tar spots
         for (int i = 0; i < map_.getMapWidth(); i++)
         {
             for (int j = 0; j < map_.getMapHeight(); j++)
@@ -135,7 +138,7 @@ public:
                 }
             }
         }
-
+        // create random boosts
         for (int i = 0; i < map_.getMapWidth(); i++)
         {
             for (int j = 0; j < map_.getMapHeight(); j++)
@@ -155,7 +158,7 @@ public:
         {
             return 0;
         }
-
+        // load sounds
         sf::SoundBuffer shootingBuff;
         if (!shootingBuff.loadFromFile("assets/shoot.wav"))
         {
@@ -182,6 +185,8 @@ public:
         mapMusic.setVolume(10.f);
         mapMusic.setLoop(true);
         mapMusic.play();
+
+        // set the coordinates of the sprite at the center of the texture for players
 
         sf::Sprite playerSprite;
         sf::Sprite netSprite;
@@ -212,10 +217,12 @@ public:
         //timer for shooting
         shootingClock = sf::Clock();
 
+
+        // main loop
         while (window.isOpen())
         {
 
-
+            // handle key input
             sf::Event event;
             while (window.pollEvent(event))
             {
@@ -252,12 +259,18 @@ public:
                 currentSpeedSide -= 0.1f*currentSpeed;
                 currentSpeed *=0.93f;
             }
+
+
+            // if hp = 0 game over
             if(player_.getHp()<1)gameEnd="YOU DED";
 
+            // if game has ended, show end screen
             if(gameEnd != ""){
                 view.setCenter(400,300);
                 window.setView(view);
                 window.clear();
+
+                // allow joining next game
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)){
                     if(net_->connect(player_))return 1;
                     else return 0;
@@ -319,31 +332,26 @@ public:
                     projectiles_.erase(projectiles_.begin() + i);
                 }
             }
+            
 
-            //checking for other players projectiles hitting you
-           /* for (size_t i = 0; i < netProjectiles_.size(); i++)
-            {
-                if (netProjectiles_[i].sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds()))
-                {
-                    player_.hit();
-                    netProjectiles_.erase(netProjectiles_.begin() + i);
-                }
-            }*/
-
+            // player drag
             currentSpeed -= player_.getCar().getDrag();
             currentSpeedSide *= 0.85f;
 
+            // dont allow negative speed
             if (currentSpeed < 0.f)
             {
                 driveSound.pause();
                 currentSpeed = 0.f;
             }
-
+            // allow boost only for short time
             else if (currentSpeed > player_.getCar().getMaxSpeed() && boostClock.getElapsedTime().asMilliseconds() > 700)
             {
                 currentSpeed = player_.getCar().getMaxSpeed();
             }
 
+
+            // handle player rotation
             if (rot > 360.f)
                 rot = 0.f;
             else if (rot < 0.f)
@@ -351,6 +359,8 @@ public:
             if (rot - playerSprite.getRotation() != 0.f)
                 playerSprite.rotate(rot - playerSprite.getRotation());
 
+
+            // calc player location and offset
             float playerX = playerSprite.getPosition().x;
             float playerY = playerSprite.getPosition().y;
             int blockX = playerX / map_.getBlockSize();
@@ -359,12 +369,14 @@ public:
             int offsetInTileX = playerX - blockX * map_.getBlockSize();
             int offsetInTileY = playerY - blockY * map_.getBlockSize();
 
+
+            // calc change in position
             float xChange = currentSpeed * cos((rot / 180.f) * 3.14f);
             float yChange = currentSpeed * sin((rot / 180.f) * 3.14f);
             xChange += currentSpeedSide * cos(((rot+90) / 180.f) * 3.14f);
             yChange += currentSpeedSide * sin(((rot+90) / 180.f) * 3.14f);
 
-
+            // collision detection
             if (playerX < 0 || playerY < 0 || blockX >= map_.getMapWidth() || blockY >= map_.getMapHeight())
             {
                 xChange *= -3.f;
@@ -397,7 +409,7 @@ if (checkHere == currentCheckpoint+1){
     currentCheckpoint = 1;
 }
 
-
+// if you win, you win :)
 if(currentLap == winLapCount){
     if(net_->iWin()){
         gameEnd = "YOU WIN";
@@ -410,7 +422,7 @@ if(currentLap == winLapCount){
         gameEnd = "YOU LOST";
     }
 }
-
+            // if -debug parameter used, show debug data
             if(debugMode){
                 text.setString(
                 "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX, blockY)) + "   " + std::to_string(boostClock.getElapsedTime().asSeconds()) +
@@ -421,12 +433,14 @@ if(currentLap == winLapCount){
             } else {
                 text.setString("");
             }
-
+            // ui texts
             UItext.setString(
                 "Ammo:" + std::to_string(player_.getAmmo()) + " Weapon cooldown: " + std::to_string(shootingClock.getElapsedTime().asSeconds()) + " HP: " + std::to_string(player_.getHp())+
                 " Lap:"+std::to_string(currentLap) +"/"+std::to_string(net_->getLapCount()));
 
             playerSprite.move(xChange, yChange);
+
+            // check collisions between players
             for (playerData pd : net_->getPlayerDataAll())
             {
                 if (pd.type != net_->getConId() && playerSprite.getGlobalBounds().contains(pd.x, pd.y))
@@ -445,6 +459,7 @@ if(currentLap == winLapCount){
 
             window.clear();
 
+            // draw only the tiles near the player to be more efficient
             int drawDistance = 3;
             for (int i = blockX - drawDistance; i < blockX + drawDistance; i++)
             {
@@ -462,29 +477,23 @@ if(currentLap == winLapCount){
 
             if (net_->isConnected())
             {
+                // send data to server
                 net_->refreshData(playerData{(int)playerX, (int)playerY, (int)rot, net_->getConId()});
                 net_->refreshAssetData(projectiles_);
 
+                // update projectile locations 
                 for (std::pair<int, int> pro : net_->getProjectileDataAll())
                 {
-                    //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
-
                     netprojSprite.setPosition(pro.first, pro.second);
                     if(netprojSprite.getGlobalBounds().intersects(playerSprite.getGlobalBounds()) && shootingClock.getElapsedTime().asMilliseconds() > 200){
                         player_.hit();
                     }
 
                     window.draw(netprojSprite);
-
-                    //if(netprojSprite.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
-                    //    player_.hit();
-                    //    netProjectiles_.erase(netProjectiles_.begin() + i);
-                    //}
                 }
-
+                // update sever player locations
                 for (playerData pd : net_->getPlayerDataAll())
                 {
-                    //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
                     nameTag.setString(pd.name);
                     nameTag.setPosition(pd.x - 10, pd.y - 40);
                     netSprite.setPosition(pd.x, pd.y);
@@ -504,6 +513,8 @@ if(currentLap == winLapCount){
                 }
             }
 
+
+            // check if player on tar spill
             for (auto it : tarSpills_)
             {
                 tarsprite_.setPosition(it.first, it.second);
@@ -514,7 +525,7 @@ if(currentLap == winLapCount){
 
                 }
             }
-
+            // check if player on boost
             for (auto it : boosts_)
             {
                 boostsprite_.setPosition(it.first, it.second);
@@ -545,6 +556,8 @@ private:
     std::vector<Projectile> netProjectiles_;
 };
 
+
+// the main menu
 std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText, std::string addr,std::string name,int windowX = 800, int windowY = 600)
 {
     int menuOpt = -1;
@@ -570,6 +583,8 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText,
     {
         return resvector;
     }
+
+    // load background image
     sf::Texture menuTEX;
     if (!menuTEX.loadFromFile("assets/menu.png"))
     {
@@ -585,7 +600,7 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText,
     std::string textInput;
     bool textInputOn = false;
     window.setFramerateLimit(12);
-
+    // while menu not closed, keep updating it
     while (menuOpt != 3 && window.isOpen())
     {
         bool allowReturn = true;
@@ -605,7 +620,7 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText,
         }
         window.clear();
         window.draw(menuS);
-
+        // if a text input was triggered, read the string from user
         if (textInputOn)
         {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
@@ -636,7 +651,7 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText,
                 continue;
             }
         }
-
+        // move in the menu
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
             window.close();
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -651,7 +666,7 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText,
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && allowReturn)
             menuOpt = tmpOpt;
 
-        // set conn addr
+        // handle menu selections
         if (menuOpt == 0)
         {
             textInputOn = true;
@@ -677,7 +692,7 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText,
             window.close();
         }
 
-        //window.clear();
+        //draw menu
         for (int menu1 = 0; menu1 < myvector.size(); menu1++)
         {
             text.setFillColor(sf::Color::White);
@@ -701,11 +716,14 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText,
 }
 
 int main(int argc, char *argv[])
-{
+{   
+    // default values
     std::string addr ="127.0.0.1";
     std::string name ="unknown peli ukko";
     bool inMenu = true;
     bool debugMode = false;
+
+    // if start params given, handle them
     if(argc>1){
 
         for(int argi = 1; argi< argc; argi++){
@@ -713,15 +731,15 @@ int main(int argc, char *argv[])
             //std::cout << argv[argi]<<"\n";
             if(argv[argi][0] =='-'){
                 com =argv[argi];
-                if(com == "-nomenu"){
+                if(com == "-nomenu"){   // skip menu
                     inMenu = false;
-                } else if(com == "-addr"){
+                } else if(com == "-addr"){  // set server address
                     argi++;
                     if(argi< argc)addr =argv[argi];
-                }else if(com == "-name"){
+                }else if(com == "-name"){   // set player name
                     argi++;
                     if(argi< argc)name =argv[argi];
-                } else if(com == "-debug"){
+                } else if(com == "-debug"){ // show debug values in game
                     debugMode = true;
                 }
             }
@@ -734,6 +752,8 @@ int main(int argc, char *argv[])
     int res = -1;
     int windowX = 800;
     int windowY = 600;
+
+    // create window for game
     sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
 
     
@@ -747,6 +767,9 @@ int main(int argc, char *argv[])
         inMenu =!verkko.connect(pelaaja);
         menuMessage ="Could not connect!";
     }
+
+
+    // handle menu selections when menu closed
     while(inMenu){
 
         
@@ -773,7 +796,7 @@ int main(int argc, char *argv[])
         else menuMessage ="Could not connect!";
     }
     
-    
+    // loop to reset the game after every round/game
     while (res!=0){
         Map kartta(verkko.getServerMap());
 
