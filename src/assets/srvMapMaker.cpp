@@ -76,6 +76,16 @@ int main()
             std::cin >> y;
             if(aiCount>0 && aiData[thisAi].size()>id)aiData[thisAi].insert(aiData[thisAi].begin()+id,std::pair<int,int>(x,y));
         }
+        else if (command == "modc")
+        {
+            int id=0;
+            std::cin >> id;
+            int x=0;
+            int y=0;
+            std::cin >> x;
+            std::cin >> y;
+            if(aiCount>0 && aiData[thisAi].size()>id)aiData[thisAi][id]=std::pair<int,int>(x,y);
+        }
         else if (command == "removec")
         {
             int id=0;
@@ -90,7 +100,7 @@ int main()
         else if (command == "save")
         {
             std::cin >> command;
-            std::ofstream mapf("./" + command);
+            std::ofstream mapf("./" + command,std::ofstream::binary);
             int aaa = 0;
             if (mapf.is_open())
             {

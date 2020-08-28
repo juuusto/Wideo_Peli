@@ -47,3 +47,6 @@ std::vector<Tile> Map::getTiles()
 {
     return tileArr_;
 }
+std::pair<int,int> Map::getStartLoc(){
+    return std::pair<int,int>(startx,starty);
+}

@@ -20,16 +20,55 @@ public:
     ~Game()
     {
     }
-    int run(sf::RenderWindow &window, int windowX = 800, int windowY = 600, int startX = 425, int startY = 312)
+    int run(sf::RenderWindow &window,bool debugMode, int windowX = 800, int windowY = 600, int startX = 425, int startY = 312)
     {
-        int currentLap = 0;
+
+
+        sf::Text text;
+        sf::Font font;
+        if (!font.loadFromFile("assets/arial.ttf"))
+        {
+            return 0;
+        }
+        sf::Sprite endS;
+        sf::Texture waitTEX;
+        if (!waitTEX.loadFromFile("assets/wait.png"))
+        {
+            return 0;
+        }
+
+        text.setFont(font);
+        text.setCharacterSize(24);
+        text.setFillColor(sf::Color::Red);
+        text.setPosition(10, 20);
+
+        while(net_->gameStatus()==2){
+            window.clear();
+            //text.setString("WAIT");
+            //window.draw(text);
+            endS.setTexture(waitTEX);
+            window.draw(endS);
+            window.display();
+        }
+        int currentLap = 1;
         int currentCheckpoint= 1;
         int checkpointMAX = 3;
-        int winLapCount = 2;
+        int winLapCount = net_->getLapCount();
         int selectedType = 0;
         std::string gameEnd = "";
         sf::View view(sf::FloatRect(0.f, 20.f, windowX, windowY - 20.f));
+        sf::Texture winTEX;
+        if (!winTEX.loadFromFile("assets/win.png"))
+        {
+            return 0;
+        }
+        sf::Texture loseTEX;
+        if (!loseTEX.loadFromFile("assets/lose.png"))
+        {
+            return 0;
+        }
 
+        
         std::vector<sf::Texture> textures;
         for (auto tx : map_.getTiles())
         {
@@ -49,20 +88,10 @@ public:
         tarsprite_.setTexture(tarText);
 
         sf::Text UItext;
-        sf::Text text;
-        sf::Font font;
-        if (!font.loadFromFile("assets/arial.ttf"))
-        {
-            return 0;
-        }
 
-        text.setFont(font);
-        text.setCharacterSize(24);
-        text.setFillColor(sf::Color::Red);
-        text.setPosition(10, 20);
         UItext.setFont(font);
         UItext.setCharacterSize(24);
-        UItext.setFillColor(sf::Color::Green);
+        UItext.setFillColor(sf::Color::Red);
         UItext.setPosition(10, 560);
 
         sf::Text nameTag;
@@ -208,11 +237,31 @@ public:
                 currentSpeedSide -= 0.1f*currentSpeed;
                 currentSpeed *=0.93f;
             }
-                
-            if(gameEnd != ""){
+            if(player_.getHp()<1)gameEnd="YOU DED";
 
+            if(gameEnd != ""){
+                view.setCenter(400,300);
+                window.setView(view);
                 window.clear();
-                text.setString(gameEnd);
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)){
+                    if(net_->connect(player_))return 1;
+                    else return 0;
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)){
+                    return 0;
+                }
+                    
+                if(gameEnd == "YOU ALMOST WON" || gameEnd == "YOU LOST"){
+                    endS.setTexture(loseTEX);
+                    window.draw(endS);
+                } else if(gameEnd == "YOU WIN"){
+                    endS.setTexture(winTEX);
+                    window.draw(endS);
+                }else {
+                    text.setString(gameEnd);
+                    window.draw(text);
+                }
+                text.setString("New game y/n ?");
+                text.setPosition(50, 50);
                 window.draw(text);
                 window.display();
                 continue;
@@ -338,20 +387,25 @@ if(currentLap == winLapCount){
     }
     //currentLap = 20;
 } else {
-    if(!net_->gameNotDone()) {
+    if(net_->gameStatus() == 0) {
         gameEnd = "YOU LOST";
     }
 }
 
-
-            text.setString(
+            if(debugMode){
+                text.setString(
                 "PLAYING AS: " + player_.getName() + " BLOCK X:" + std::to_string(blockX) + " Y:" + std::to_string(blockY) + " Type:" + std::to_string(map_.getTileId(blockX, blockY)) + "   " + std::to_string(boostClock.getElapsedTime().asSeconds()) +
                 "\nW:" + std::to_string(view.getSize().x) + " H:" + std::to_string(view.getSize().y) + " OffsetXinTile:" + std::to_string(offsetInTileX) + " OffsetYinTile:" + std::to_string(offsetInTileY)+
                 "\n playerX:"+std::to_string(playerSprite.getPosition().x)+" playerY:"+std::to_string(playerSprite.getPosition().y) +"\nspeedForward:"+std::to_string(currentSpeed)+"speedSide"+std::to_string(currentSpeedSide)+
-                "\nLap:"+std::to_string(currentLap) + " cPoint:"+std::to_string(currentCheckpoint)+ " tilecPoint:"+std::to_string(checkHere));
+                "\nLap:"+std::to_string(currentLap) +"/"+std::to_string(net_->getLapCount())+ " cPoint:"+std::to_string(currentCheckpoint)+ " tilecPoint:"+std::to_string(checkHere));
+
+            } else {
+                text.setString("");
+            }
 
             UItext.setString(
-                "Ammo:" + std::to_string(player_.getAmmo()) + "     CD: " + std::to_string(shootingClock.getElapsedTime().asSeconds()) + "       HP: " + std::to_string(player_.getHp()));
+                "Ammo:" + std::to_string(player_.getAmmo()) + " Weapon cooldown: " + std::to_string(shootingClock.getElapsedTime().asSeconds()) + " HP: " + std::to_string(player_.getHp())+
+                " Lap:"+std::to_string(currentLap) +"/"+std::to_string(net_->getLapCount()));
 
             playerSprite.move(xChange, yChange);
             for (playerData pd : net_->getPlayerDataAll())
@@ -397,6 +451,10 @@ if(currentLap == winLapCount){
                     //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
 
                     netprojSprite.setPosition(pro.first, pro.second);
+                    if(netprojSprite.getGlobalBounds().intersects(playerSprite.getGlobalBounds()) && shootingClock.getElapsedTime().asMilliseconds() > 200){
+                        player_.hit();
+                    }
+
                     window.draw(netprojSprite);
 
                     //if(netprojSprite.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
@@ -448,13 +506,6 @@ if(currentLap == winLapCount){
                     currentSpeed = 14 ;
                 }
             }
-            for (auto it : projectiles_)
-            {
-                //window.draw(it.sprite_);
-                if(it.sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds()) && shootingClock.getElapsedTime().asMilliseconds() > 200){
-                    player_.hit();
-                }
-            }
             window.draw(playerSprite);
             window.draw(text);
             window.draw(UItext);
@@ -475,15 +526,15 @@ private:
     std::vector<Projectile> netProjectiles_;
 };
 
-std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText, int windowX = 800, int windowY = 600)
+std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText, std::string addr,std::string name,int windowX = 800, int windowY = 600)
 {
     int menuOpt = -1;
     int tmpOpt = 0;
     int valueToEdit = 0;
     int inputTextVal = 0;
     std::vector<std::string> resvector;
-    resvector.push_back("127.0.0.1");
-    resvector.push_back("unknown peli ukko");
+    resvector.push_back(addr);
+    resvector.push_back(name);
     resvector.push_back("");
     std::vector<std::string> inputTextvector;
     inputTextvector.push_back("Address");
@@ -630,26 +681,61 @@ std::vector<std::string> mainMenu(sf::RenderWindow &window,std::string menuText,
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+    std::string addr ="127.0.0.1";
+    std::string name ="unknown peli ukko";
+    bool inMenu = true;
+    bool debugMode = false;
+    if(argc>1){
+
+        for(int argi = 1; argi< argc; argi++){
+            std::string com = "";
+            //std::cout << argv[argi]<<"\n";
+            if(argv[argi][0] =='-'){
+                com =argv[argi];
+                if(com == "-nomenu"){
+                    inMenu = false;
+                } else if(com == "-addr"){
+                    argi++;
+                    if(argi< argc)addr =argv[argi];
+                }else if(com == "-name"){
+                    argi++;
+                    if(argi< argc)name =argv[argi];
+                } else if(com == "-debug"){
+                    debugMode = true;
+                }
+            }
+
+            
+
+
+        }
+    }
+    int res = -1;
     int windowX = 800;
     int windowY = 600;
     sf::RenderWindow window(sf::VideoMode(windowX, windowY), "WIDEO PELI");
 
-    bool inMenu = true;
+    
     std::string menuMessage = "";
     Vehicle ajoneuvo("assets/car.png", 10.f, 1.f, 5.f, .5f);
     Player pelaaja("tmp", "", ajoneuvo);
     Network verkko;
-
+    if(!inMenu){
+        pelaaja.setName(name);
+        verkko.setAddress(addr);
+        inMenu =!verkko.connect(pelaaja);
+        menuMessage ="Could not connect!";
+    }
     while(inMenu){
 
         
-        std::vector<std::string> menuOpts = mainMenu(window,menuMessage, windowX, windowY);
+        std::vector<std::string> menuOpts = mainMenu(window,menuMessage, addr,name, windowX, windowY);
         
 
-        std::string addr = menuOpts[0];
-        std::string name = menuOpts[1];
+        addr = menuOpts[0];
+        name = menuOpts[1];
         std::cout << addr << "  " << name << std::endl;
 
         pelaaja.setName(name);
@@ -667,12 +753,15 @@ int main()
         else menuMessage ="Could not connect!";
     }
     
+    
+    while (res!=0){
+        Map kartta(verkko.getServerMap());
 
-    Map kartta(verkko.getServerMap());
+        Game peli(kartta, pelaaja, &verkko);
 
-    Game peli(kartta, pelaaja, &verkko);
+        res = peli.run(window,debugMode, windowX, windowY, kartta.getStartLoc().first, kartta.getStartLoc().second);
+    }
 
-    int res = peli.run(window, windowX, windowY, 425, 312);
 
     return res;
 }

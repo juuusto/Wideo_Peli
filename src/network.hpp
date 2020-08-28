@@ -30,7 +30,7 @@ public:
     bool connect(Player player);
     void setAddress(std::string address);
     bool iWin();
-    bool gameNotDone();
+    int gameStatus();
     int getConId();
     bool disconnect();
     bool isConnected();
@@ -40,6 +40,7 @@ public:
     std::vector<playerData> getPlayerDataAll();
     std::vector<std::pair<int, int>> getProjectileDataAll();
     int getPlayerCount();
+    int getLapCount();
     std::string getServerMap();
 
 private:
@@ -51,5 +52,6 @@ private:
     std::vector<playerData> data_;
     std::vector<std::pair<int, int>> projdata_;
     int conId_;
+    int srvLapCount_;
     std::string srvMap_;
 };

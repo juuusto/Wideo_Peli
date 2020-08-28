@@ -54,6 +54,11 @@ public:
                 byte >> 8;
             }
             musicFname += ".wav";
+            // read player start coords; 8 bytes
+            startx = 0;
+            starty = 0;
+            mapf.read((char *)&startx, 4);
+            mapf.read((char *)&starty, 4);
 
             //Read to width(x). Size is 2 bytes.
             mapf.read(&byte, 1);
@@ -114,7 +119,7 @@ public:
     void constructMap();
 
     int getBlockSize();
-
+    std::pair<int,int> getStartLoc();
     Tile getTile(int id);
 
     Tile getTile(int x, int y);
@@ -135,4 +140,6 @@ private:
     std::vector<int> mapArray_;
     Grid grid;
     std::string musicFname;
+    int startx;
+    int starty;
 };

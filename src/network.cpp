@@ -36,11 +36,12 @@ bool Network::connect(Player player)
     }
     std::string s(data);
     std::vector<std::string> tmpData = this->parseData(s);
-    if (tmpData.size() == 3 && tmpData[0] == "OK")
+    if (tmpData.size() == 4 && tmpData[0] == "OK")
     {
         conId_ = std::stoi(tmpData[1]);
         srvMap_ = tmpData[2];
         connected_ = true;
+        srvLapCount_ = std::stoi(tmpData[3]);
     }
     socket_.setBlocking(false);
     return connected_;
@@ -73,10 +74,10 @@ void Network::refreshData(playerData pd)
     }
 
     sf::IpAddress sender;
-    char data[300];
+    char data[1300];
     std::size_t received;
     unsigned short port;
-    if (socket_.receive(data, 100, received, sender, port) != sf::Socket::Done)
+    if (socket_.receive(data, 1300, received, sender, port) != sf::Socket::Done)
     {
         // error...
     }
@@ -161,6 +162,10 @@ int Network::getPlayerCount()
 {
     return data_.size();
 }
+int Network::getLapCount()
+{
+    return srvLapCount_;
+}
 std::string Network::getServerMap()
 {
     return srvMap_;
@@ -201,7 +206,7 @@ bool Network::iWin()
     
     return false;
 }
-bool Network::gameNotDone()
+int Network::gameStatus()
 {
     socket_.setBlocking(true);
     sf::IpAddress recipient = serveraddr_;
@@ -228,11 +233,13 @@ bool Network::gameNotDone()
     try
     {
         std::vector<std::string> tmpData = this->parseData(s);
-        return tmpData[0]=="KEEPGOING";
+        if( tmpData[0]=="KEEPGOING") return 1;
+        else if( tmpData[0]=="HOLD") return 2;
+        else return 0;
     }
     catch (const std::exception &e)
     {
     }
     
-    return false;
+    return 0;
 }
