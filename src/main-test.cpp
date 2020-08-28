@@ -14,10 +14,10 @@
 #include "network.cpp"
 
 TEST_CASE("Test that get tile works","[map]") {
-    Map map("map3.map");
+    Map map("map5.map");
     REQUIRE(map.getMapHeight() != 0);
     CHECK(map.getMapMusicFile() != "");
-    CHECK(map.getTileId(0,0) == 1);
+    CHECK(map.getTileId(0,0) == 8);
     map.setTile(0,0,20);
     CHECK(map.getTileId(0,0) == 20);
     CHECK(map.getMapWidth() != 0);
@@ -76,7 +76,7 @@ TEST_CASE("Test if network works properly.","[network]" ) {
     CHECK(aa.getPlayerCount() == 0);
     CHECK(aa.disconnect() == false);
     CHECK(aa.isConnected() == true);
-    //not connected, so should be 0
+    //only player, so should be 0
     CHECK(aa.getConId() == 0);
 }
 
