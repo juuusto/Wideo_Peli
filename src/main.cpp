@@ -22,6 +22,26 @@ public:
     }
     int run(sf::RenderWindow &window, int windowX = 800, int windowY = 600, int startX = 425, int startY = 312)
     {
+
+
+        sf::Text text;
+        sf::Font font;
+        if (!font.loadFromFile("assets/arial.ttf"))
+        {
+            return 0;
+        }
+
+        text.setFont(font);
+        text.setCharacterSize(24);
+        text.setFillColor(sf::Color::Red);
+        text.setPosition(10, 20);
+
+        while(net_->gameStatus()==2){
+            window.clear();
+            text.setString("WAIT");
+            window.draw(text);
+            window.display();
+        }
         int currentLap = 0;
         int currentCheckpoint= 1;
         int checkpointMAX = 3;
@@ -49,17 +69,7 @@ public:
         tarsprite_.setTexture(tarText);
 
         sf::Text UItext;
-        sf::Text text;
-        sf::Font font;
-        if (!font.loadFromFile("assets/arial.ttf"))
-        {
-            return 0;
-        }
 
-        text.setFont(font);
-        text.setCharacterSize(24);
-        text.setFillColor(sf::Color::Red);
-        text.setPosition(10, 20);
         UItext.setFont(font);
         UItext.setCharacterSize(24);
         UItext.setFillColor(sf::Color::Green);
@@ -338,7 +348,7 @@ if(currentLap == winLapCount){
     }
     //currentLap = 20;
 } else {
-    if(!net_->gameNotDone()) {
+    if(net_->gameStatus() == 0) {
         gameEnd = "YOU LOST";
     }
 }

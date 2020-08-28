@@ -1,1 +1,1 @@
-serv.exe map4.srv
+serv.exe map4.srv 2

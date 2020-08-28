@@ -30,7 +30,7 @@ public:
     bool connect(Player player);
     void setAddress(std::string address);
     bool iWin();
-    bool gameNotDone();
+    int gameStatus();
     int getConId();
     bool disconnect();
     bool isConnected();

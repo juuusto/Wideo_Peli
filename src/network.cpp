@@ -201,7 +201,7 @@ bool Network::iWin()
     
     return false;
 }
-bool Network::gameNotDone()
+int Network::gameStatus()
 {
     socket_.setBlocking(true);
     sf::IpAddress recipient = serveraddr_;
@@ -228,11 +228,13 @@ bool Network::gameNotDone()
     try
     {
         std::vector<std::string> tmpData = this->parseData(s);
-        return tmpData[0]=="KEEPGOING";
+        if( tmpData[0]=="KEEPGOING") return 1;
+        else if( tmpData[0]=="HOLD") return 2;
+        else return 0;
     }
     catch (const std::exception &e)
     {
     }
     
-    return false;
+    return 0;
 }
