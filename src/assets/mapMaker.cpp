@@ -33,6 +33,8 @@ int main()
 
     unsigned int mapW = 0;
     unsigned int mapH = 0;
+    unsigned int sx = 0;
+    unsigned int sy = 0;
     unsigned int usableTilesCount = 0;
 
     std::vector<char> mapData;
@@ -50,6 +52,9 @@ int main()
         {
             std::cout << "MAPWIDTH:" << mapW << std::endl;
             std::cout << "MAPHEIGHT:" << mapH << std::endl;
+            std::cout << "STARTX:" << sx << std::endl;
+            std::cout << "STARTY:" << sy << std::endl;
+
             std::cout << "MUSICFILE:" << musicName << std::endl;
             std::cout << "LINKDATA:" << std::endl;
             for (int i = 0; i < linkData.size(); i++)
@@ -116,6 +121,12 @@ int main()
                 mapData[mapW * mody + modx] = tmp;
             }
         }
+        else if (command == "setstart")
+        {
+            std::cin >> sx;
+            std::cin >> sy;   
+        }
+
         else if (command == "save")
         {
             std::cin >> command;
@@ -123,6 +134,10 @@ int main()
             if (mapf.is_open())
             {
                 mapf.write(musicName.c_str(), 8);
+                int aaa = sx;
+                mapf.write(reinterpret_cast<const char *>(&aaa), 4);
+                aaa = sy;
+                mapf.write(reinterpret_cast<const char *>(&aaa), 4);
                 mapf.put((mapW >> 8) & 0xFF);
                 mapf.put((mapW & 0xFF));
                 mapf.put((mapH >> 8) & 0xFF);
@@ -152,6 +167,9 @@ int main()
                     mapf.read(&tmpchar, 1);
                     musicName += tmpchar;
                 }
+
+                mapf.read((char *)&sx, 4);
+                mapf.read((char *)&sy, 4);
 
                 mapf.read(&tmpchar, 1);
                 mapW = tmpchar << 8;
@@ -187,6 +205,8 @@ int main()
         {
             mapW = 0;
             mapH = 0;
+            sx = 0;
+            sy = 0;
             usableTilesCount = 0;
             mapData.clear();
             musicName = "\0\0\0\0\0\0\0\0";

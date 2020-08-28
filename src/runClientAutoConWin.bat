@@ -1,0 +1,1 @@
+game -nomenu -addr 82.130.34.187 -name my_name

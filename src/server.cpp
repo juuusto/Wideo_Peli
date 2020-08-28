@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
         while (gameon || (std::time(nullptr)-gameoverTimeout)<2)
         {
 
-            if(players.size()==wantedPcount)startGame=true;
+            if(players.size() >= wantedPcount)startGame=true;
             currentTime = std::time(nullptr);
             betterTime = std::chrono::steady_clock::now();
 
@@ -250,7 +250,7 @@ int main(int argc, char *argv[])
                 {
                     projData.push_back(std::vector<projectileData>());
                     players.push_back(playerServerData{100, 100, 0, (int)players.size(), currentTime, tmp_arr[1]});
-                    res = "OK;" + std::to_string(players.size() - 1) + ";" + SERVER_MAP + ";";
+                    res = "OK;" + std::to_string(players.size() - 1) + ";" + SERVER_MAP + ";"+std::to_string(winLapCount)+";";
                 }
                 else
                 {

@@ -36,11 +36,12 @@ bool Network::connect(Player player)
     }
     std::string s(data);
     std::vector<std::string> tmpData = this->parseData(s);
-    if (tmpData.size() == 3 && tmpData[0] == "OK")
+    if (tmpData.size() == 4 && tmpData[0] == "OK")
     {
         conId_ = std::stoi(tmpData[1]);
         srvMap_ = tmpData[2];
         connected_ = true;
+        srvLapCount_ = std::stoi(tmpData[3]);
     }
     socket_.setBlocking(false);
     return connected_;
@@ -160,6 +161,10 @@ std::vector<std::pair<int, int>> Network::getProjectileDataAll()
 int Network::getPlayerCount()
 {
     return data_.size();
+}
+int Network::getLapCount()
+{
+    return srvLapCount_;
 }
 std::string Network::getServerMap()
 {
