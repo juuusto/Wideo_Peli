@@ -30,6 +30,12 @@ public:
         {
             return 0;
         }
+        sf::Sprite endS;
+        sf::Texture waitTEX;
+        if (!waitTEX.loadFromFile("assets/wait.png"))
+        {
+            return 0;
+        }
 
         text.setFont(font);
         text.setCharacterSize(24);
@@ -38,8 +44,10 @@ public:
 
         while(net_->gameStatus()==2){
             window.clear();
-            text.setString("WAIT");
-            window.draw(text);
+            //text.setString("WAIT");
+            //window.draw(text);
+            endS.setTexture(waitTEX);
+            window.draw(endS);
             window.display();
         }
         int currentLap = 0;
@@ -49,7 +57,18 @@ public:
         int selectedType = 0;
         std::string gameEnd = "";
         sf::View view(sf::FloatRect(0.f, 20.f, windowX, windowY - 20.f));
+        sf::Texture winTEX;
+        if (!winTEX.loadFromFile("assets/win.png"))
+        {
+            return 0;
+        }
+        sf::Texture loseTEX;
+        if (!loseTEX.loadFromFile("assets/lose.png"))
+        {
+            return 0;
+        }
 
+        
         std::vector<sf::Texture> textures;
         for (auto tx : map_.getTiles())
         {
@@ -221,10 +240,19 @@ public:
             if(player_.getHp()<1)gameEnd="YOU DED";
 
             if(gameEnd != ""){
-
+                view.setCenter(400,300);
+                window.setView(view);
                 window.clear();
-                text.setString(gameEnd);
-                window.draw(text);
+                if(gameEnd == "YOU ALMOST WON" || gameEnd == "YOU LOST"){
+                    endS.setTexture(loseTEX);
+                    window.draw(endS);
+                } else if(gameEnd == "YOU WIN"){
+                    endS.setTexture(winTEX);
+                    window.draw(endS);
+                }else {
+                    text.setString(gameEnd);
+                    window.draw(text);
+                }
                 window.display();
                 continue;
             }

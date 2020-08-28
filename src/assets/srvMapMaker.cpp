@@ -100,7 +100,7 @@ int main()
         else if (command == "save")
         {
             std::cin >> command;
-            std::ofstream mapf("./" + command);
+            std::ofstream mapf("./" + command,std::ofstream::binary);
             int aaa = 0;
             if (mapf.is_open())
             {
