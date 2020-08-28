@@ -130,7 +130,7 @@ int main()
         else if (command == "save")
         {
             std::cin >> command;
-            std::ofstream mapf("./" + command);
+            std::ofstream mapf("./" + command,std::ofstream::binary);
             if (mapf.is_open())
             {
                 mapf.write(musicName.c_str(), 8);
