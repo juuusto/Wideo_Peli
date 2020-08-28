@@ -218,7 +218,8 @@ public:
                 currentSpeedSide -= 0.1f*currentSpeed;
                 currentSpeed *=0.93f;
             }
-                
+            if(player_.getHp()<1)gameEnd="YOU DED";
+
             if(gameEnd != ""){
 
                 window.clear();
@@ -407,6 +408,10 @@ if(currentLap == winLapCount){
                     //std::cout<<std::to_string(pd.x)<< ";"<<std::to_string(pd.y)<<";"<<std::to_string(pd.r)<<std::endl;
 
                     netprojSprite.setPosition(pro.first, pro.second);
+                    if(netprojSprite.getGlobalBounds().intersects(playerSprite.getGlobalBounds()) && shootingClock.getElapsedTime().asMilliseconds() > 200){
+                        player_.hit();
+                    }
+
                     window.draw(netprojSprite);
 
                     //if(netprojSprite.getGlobalBounds().intersects(playerSprite.getGlobalBounds())){
@@ -456,13 +461,6 @@ if(currentLap == winLapCount){
                 {
                     boostClock.restart();
                     currentSpeed = 14 ;
-                }
-            }
-            for (auto it : projectiles_)
-            {
-                //window.draw(it.sprite_);
-                if(it.sprite_.getGlobalBounds().intersects(playerSprite.getGlobalBounds()) && shootingClock.getElapsedTime().asMilliseconds() > 200){
-                    player_.hit();
                 }
             }
             window.draw(playerSprite);
