@@ -67,6 +67,11 @@ public:
         {
             return 0;
         }
+        sf::Texture dedTEX;
+        if (!loseTEX.loadFromFile("assets/ded.png"))
+        {
+            return 0;
+        }
 
         
         std::vector<sf::Texture> textures;
@@ -156,6 +161,15 @@ public:
         {
             return 0;
         }
+
+        sf::Music driveSound;
+        if (!driveSound.openFromFile("assets/drive.wav"))
+        {
+            return 0;
+        }
+
+        driveSound.setVolume(10.f);
+        driveSound.setLoop(true);
         sf::Sound shootingSound;
         shootingSound.setBuffer(shootingBuff);
         shootingSound.setVolume(10.f);
@@ -220,6 +234,7 @@ public:
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
             {
+                if(driveSound.getStatus() != driveSound.Playing) driveSound.play();
                 currentSpeed += player_.getCar().getAcceleration();
             }
             else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
@@ -255,6 +270,9 @@ public:
                     window.draw(endS);
                 } else if(gameEnd == "YOU WIN"){
                     endS.setTexture(winTEX);
+                    window.draw(endS);
+                }else if(gameEnd == "YOU DED"){
+                    endS.setTexture(dedTEX);
                     window.draw(endS);
                 }else {
                     text.setString(gameEnd);
@@ -317,6 +335,7 @@ public:
 
             if (currentSpeed < 0.f)
             {
+                driveSound.pause();
                 currentSpeed = 0.f;
             }
 
