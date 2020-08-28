@@ -762,6 +762,7 @@ int main(int argc, char *argv[])
         verkko.setAddress(addr);
         if (menuOpts[2] == "GAME_EXIT"){
             inMenu=false; 
+            return 0;
             //break;
         }
         else if (menuOpts[2] == "GAME_CONNECT" && verkko.connect(pelaaja)) {
