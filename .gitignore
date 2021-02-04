@@ -19,3 +19,6 @@ a.out
 /src/tests
 /src/tests.exe
 /src/main-test.o
+/src/*.dll
+/evaluation
+/plan
